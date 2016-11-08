@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DADStorm
+namespace DADstorm
 {
-    class Operator
+    public abstract class Operator
     {
 
         private int id;
@@ -14,17 +14,6 @@ namespace DADStorm
         private RoutingOption routing;
         private int replicas;
         private List<string> addresses;
-        private OperatorSpec operatorspec;
-
-        public Operator(int id, string inputSource, RoutingOption routing, int replicas, List<string> addresses, OperatorSpec operatorspec)
-        {
-            this.id = id;
-            this.inputSource = inputSource;
-            this.routing = routing;
-            this.replicas = replicas;
-            this.addresses = addresses;
-            this.operatorspec = operatorspec;
-        }
 
         public void execute()
         {
@@ -32,7 +21,6 @@ namespace DADStorm
             {
                 connectToInput();
             }
-            executeSomeThings();
         }
 
         public void connectToInput()
@@ -44,12 +32,6 @@ namespace DADStorm
         {
             return false;
         }
-
-        public void executeSomeThings()
-        {
-
-        }
-
 
     }
 }

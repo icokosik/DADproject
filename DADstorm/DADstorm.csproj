@@ -44,11 +44,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConfigFileReader.cs" />
+    <Compile Include="Operator\CountOperator.cs" />
+    <Compile Include="Operator\CustomOperator.cs" />
+    <Compile Include="Operator\DupOperator.cs" />
     <Compile Include="Enum.cs" />
-    <Compile Include="Operator.cs" />
+    <Compile Include="Operator\FilterOperator.cs" />
+    <Compile Include="Operator\Operator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PuppetMaster.cs" />
+    <Compile Include="Tuple.cs" />
+    <Compile Include="Operator\UniqOperator.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
