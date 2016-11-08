@@ -10,6 +10,9 @@ namespace DADstorm
     {
         static void Main(string[] args)
         {
+            PuppetMaster pm = new PuppetMaster();
+            //ConfigFileReader cfr = new ConfigFileReader();
+         
         }
     }
 }
