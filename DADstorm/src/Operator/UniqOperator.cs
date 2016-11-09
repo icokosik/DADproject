@@ -25,11 +25,15 @@ namespace DADstorm
 
         public override Tuple execute()
         {
-            Tuple input = new Tuple(new List<Object>());
             checkInput(input);
             if (passedItems.Contains(input)) return null;
             passedItems.Add(input);
             return input;
+        }
+
+        public void setInput(Tuple input)
+        {
+            this.input = input;
         }
     }
 }

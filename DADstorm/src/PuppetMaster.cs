@@ -54,6 +54,9 @@ namespace DADstorm
                     case "Load":
                         loadConfigFile();
                         break;
+                    case "Test":
+                        test();
+                        break;
 
                     default:
                         Console.WriteLine("Command doesn´t exist");
@@ -80,6 +83,36 @@ namespace DADstorm
         public void freezeCMD(string operatorID, string replicaID) { }
         public void unfreezeCMD(string operatorID, string replicaID) { }
         public void waitCMD(Int32 wait_ms) { }
+        public void test()
+        {
+            Tuple t1 = new Tuple(new List<object>
+            {
+                1, "test"
+            });
+            Tuple t2 = new Tuple(new List<object>
+            {
+                1, "test"
+            });
+            Tuple t3 = new Tuple(new List<object>
+            {
+                2, "test2"
+            });
+            Tuple res;
+
+            UniqOperator op = new UniqOperator(1, "1", 0, RoutingOption.PRIMARY, 1, new List<string> { "dummyaddress" });
+            op.setInput(t1);
+            writeOutput(op.execute());
+            op.setInput(t2);
+            writeOutput(op.execute());
+            op.setInput(t3);
+            writeOutput(op.execute());
+        }
+
+        public void writeOutput(Tuple t)
+        {
+            if (t == null) System.Console.WriteLine("false");
+            else System.Console.WriteLine("true: " + t);
+        }
 
 
         //CONFIG FILE
