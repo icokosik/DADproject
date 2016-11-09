@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DADstorm
 {
-    class PuppetMaster
+    public class PuppetMaster
     {
         ArrayList mainCMD;
         ArrayList allCMDinfile;

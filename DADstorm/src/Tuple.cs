@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DADstorm
 {
-    class Tuple
+    public class Tuple
     {
         private List<Object> items;
 

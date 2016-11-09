@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace DADstorm
 {
-    class DupOperator : Operator
+    public class DupOperator : Operator
     {
+        public override bool checkInput(Tuple t)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

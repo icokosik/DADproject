@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DADstorm
 {
-    class ConfigFileReader
+    public class ConfigFileReader
     {
         StreamReader file;
         ArrayList cmdArray = new ArrayList();

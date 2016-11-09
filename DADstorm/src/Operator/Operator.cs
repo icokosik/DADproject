@@ -10,10 +10,13 @@ namespace DADstorm
     {
 
         private int id;
+        private string name;
         private string inputSource;
         private RoutingOption routing;
         private int replicas;
         private List<string> addresses;
+
+        public abstract bool checkInput(Tuple t);
 
         public void execute()
         {
