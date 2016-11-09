@@ -9,21 +9,25 @@ namespace DADstorm
     public abstract class Operator
     {
 
-        private int id;
-        private string name;
-        private string inputSource;
-        private RoutingOption routing;
-        private int replicas;
-        private List<string> addresses;
+        protected int id;
+        protected string name;
+        protected int inputSource;
+        protected RoutingOption routing;
+        protected int replicas;
+        protected List<string> addresses;
 
         public abstract bool checkInput(Tuple t);
+        public abstract Tuple execute();
 
-        public void execute()
+        public Operator(int id, string name, int inputSource, RoutingOption routing, int replicas, List<string> addresses)
         {
-            if (!connectionToInput())
-            {
-                connectToInput();
-            }
+            // TODO: check id != inputsource
+            this.id = id;
+            this.name = name;
+            this.inputSource = inputSource;
+            this.routing = routing;
+            this.replicas = replicas;
+            this.addresses = addresses;
         }
 
         public void connectToInput()

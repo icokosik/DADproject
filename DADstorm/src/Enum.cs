@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace DADstorm
 {
-    enum RoutingOption
+    public enum RoutingOption
     {
         PRIMARY, HASHING, RANDOM
     };
 
-    enum OperatorSpec
+    public enum OperatorSpec
     {
         UNIQ, COUNT, DUP, FILTER, CUSTOM
     };
