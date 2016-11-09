@@ -98,7 +98,7 @@ namespace DADstorm
                 1, "test2"
             });
 
-            Operator op = new CountOperator(1, "1", 0, RoutingOption.PRIMARY, 1, new List<string> { "dummyaddress" });
+            Operator op = new DupOperator(1, "1", 0, RoutingOption.PRIMARY, 1, new List<string> { "dummyaddress" });
             op.setInput(t1);
             writeOutput(op.execute());
             op.setInput(t2);

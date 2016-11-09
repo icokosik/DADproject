@@ -16,12 +16,12 @@ namespace DADstorm
 
         public override bool checkInput(Tuple t)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public override Tuple execute()
         {
-            throw new NotImplementedException();
+            return input;
         }
     }
 }
