@@ -21,7 +21,7 @@ namespace DADstorm
         {
             string line;
             //path
-            file = new StreamReader(@"../../dadstorm.config");
+            file = new StreamReader(@"../../doc/dadstorm.config");
             //config file to ArrayList
             while ((line = file.ReadLine()) != null)
             {
