@@ -8,8 +8,6 @@ namespace DADstorm
 {
     public class UniqOperator : Operator
     {
-
-        private Tuple input;
         private int fieldNumber;
         private List<Object> passedItems;
 
@@ -32,11 +30,6 @@ namespace DADstorm
             if (passedItems.Contains(input.getItems()[fieldNumber])) return null;
             passedItems.Add(input.getItems()[fieldNumber]);
             return input;
-        }
-
-        public void setInput(Tuple input)
-        {
-            this.input = input;
         }
     }
 }

@@ -15,6 +15,7 @@ namespace DADstorm
         protected RoutingOption routing;
         protected int replicas;
         protected List<string> addresses;
+        protected Tuple input;
 
         public abstract bool checkInput(Tuple t);
         public abstract Tuple execute();
@@ -28,6 +29,11 @@ namespace DADstorm
             this.routing = routing;
             this.replicas = replicas;
             this.addresses = addresses;
+        }
+
+        public void setInput(Tuple input)
+        {
+            this.input = input;
         }
 
         // TODO: Diana

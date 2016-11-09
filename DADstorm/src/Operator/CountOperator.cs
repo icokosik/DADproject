@@ -8,6 +8,7 @@ namespace DADstorm
 {
     public class CountOperator : Operator
     {
+        private int count = 0;
 
         public CountOperator(int id, string name, int inputSource, RoutingOption routing, int replicas, List<string> addresses)
             : base(id, name, inputSource, routing, replicas, addresses)
@@ -17,12 +18,14 @@ namespace DADstorm
 
         public override bool checkInput(Tuple t)
         {
-            throw new NotImplementedException();
+            return true;
         }
 
         public override Tuple execute()
         {
-            throw new NotImplementedException();
+            if(!checkInput(input)) throw new InvalidInputException();
+            count++;
+            return new Tuple(new List<Object> { count });
         }
     }
 }

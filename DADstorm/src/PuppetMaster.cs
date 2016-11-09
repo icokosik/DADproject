@@ -98,7 +98,7 @@ namespace DADstorm
                 1, "test2"
             });
 
-            UniqOperator op = new UniqOperator(1, "1", 0, RoutingOption.PRIMARY, 1, new List<string> { "dummyaddress" }, 1);
+            Operator op = new CountOperator(1, "1", 0, RoutingOption.PRIMARY, 1, new List<string> { "dummyaddress" });
             op.setInput(t1);
             writeOutput(op.execute());
             op.setInput(t2);
@@ -109,8 +109,7 @@ namespace DADstorm
 
         public void writeOutput(Tuple t)
         {
-            if (t == null) System.Console.WriteLine("false");
-            else System.Console.WriteLine("true: " + t);
+            System.Console.WriteLine(t);
         }
 
 
