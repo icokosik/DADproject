@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\ConfigFileReader.cs" />
+    <Compile Include="src\Exception\InvalidInputException.cs" />
     <Compile Include="src\Operator\CountOperator.cs" />
     <Compile Include="src\Operator\CustomOperator.cs" />
     <Compile Include="src\Operator\DupOperator.cs" />

@@ -91,15 +91,15 @@ namespace DADstorm
             });
             Tuple t2 = new Tuple(new List<object>
             {
-                1, "test"
+                1, "test2"
             });
             Tuple t3 = new Tuple(new List<object>
             {
-                2, "test2"
+                1, "test2"
             });
             Tuple res;
 
-            UniqOperator op = new UniqOperator(1, "1", 0, RoutingOption.PRIMARY, 1, new List<string> { "dummyaddress" });
+            UniqOperator op = new UniqOperator(1, "1", 0, RoutingOption.PRIMARY, 1, new List<string> { "dummyaddress" }, 1);
             op.setInput(t1);
             writeOutput(op.execute());
             op.setInput(t2);
