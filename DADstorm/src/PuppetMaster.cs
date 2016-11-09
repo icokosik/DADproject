@@ -97,7 +97,6 @@ namespace DADstorm
             {
                 1, "test2"
             });
-            Tuple res;
 
             UniqOperator op = new UniqOperator(1, "1", 0, RoutingOption.PRIMARY, 1, new List<string> { "dummyaddress" }, 1);
             op.setInput(t1);
@@ -118,11 +117,16 @@ namespace DADstorm
         //CONFIG FILE
         public void loadConfigFile()
         {
-            ConfigFileReader configFile = new ConfigFileReader();
-            allCMDinfile = configFile.returnCMDArray();
+            BasicFileReader configFile = new BasicFileReader(@"../../doc/dadstorm.config");
+            allCMDinfile = configFile.returnFileArray();
             commandRecognizer();
         }
 
+        public ArrayList loadInputFile(string path)
+        {
+            BasicFileReader inputFile = new BasicFileReader(path);
+            return inputFile.returnFileArray();
+        }
 
         public ArrayList parseLineToArray(string text)
         {
