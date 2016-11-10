@@ -35,6 +35,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Remoting" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -45,6 +46,7 @@
   <ItemGroup>
     <Compile Include="src\BasicFileReader.cs" />
     <Compile Include="src\Exception\InvalidInputException.cs" />
+    <Compile Include="src\Logging.cs" />
     <Compile Include="src\Operator\CountOperator.cs" />
     <Compile Include="src\Operator\CustomOperator.cs" />
     <Compile Include="src\Operator\DupOperator.cs" />
