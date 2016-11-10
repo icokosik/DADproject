@@ -8,7 +8,7 @@ namespace DADstorm
 {
     public class CustomOperator : Operator
     {
-        public CustomOperator(int id, string name, int inputSource, RoutingOption routing, int replicas, List<string> addresses)
+        public CustomOperator(int id, string name, List<string> inputSource, RoutingOption routing, int replicas, List<string> addresses)
             : base(id, name, inputSource, routing, replicas, addresses)
         {
 

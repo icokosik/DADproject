@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace DADstorm
@@ -11,7 +12,7 @@ namespace DADstorm
 
         protected int id;
         protected string name;
-        protected int inputSource;
+        protected List<string> inputSource;
         protected RoutingOption routing;
         protected int replicas;
         protected List<string> addresses;
@@ -20,7 +21,7 @@ namespace DADstorm
         public abstract bool checkInput(Tuple t);
         public abstract Tuple execute();
 
-        public Operator(int id, string name, int inputSource, RoutingOption routing, int replicas, List<string> addresses)
+        public Operator(int id, string name, List<string> inputSource, RoutingOption routing, int replicas, List<string> addresses)
         {
             // TODO: check id != inputsource
             this.id = id;
@@ -39,7 +40,22 @@ namespace DADstorm
         // TODO: Diana
         public void connectToInput()
         {
-
+            foreach(string tmp in inputSource)
+            {
+                if (Regex.IsMatch(tmp, "^OP\\d+$")) //operator in format OP1, OP2, ..., OPn
+                {
+                   
+                }
+                else if (Regex.IsMatch(tmp, @"^\d+$")) //operator as number 
+                {
+                   
+                }
+                else // input file
+                {
+ 
+                }
+            }
+ 
         }
 
         public bool connectionToInput()

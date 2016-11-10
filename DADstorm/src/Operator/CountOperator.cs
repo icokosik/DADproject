@@ -10,7 +10,7 @@ namespace DADstorm
     {
         private int count = 0;
 
-        public CountOperator(int id, string name, int inputSource, RoutingOption routing, int replicas, List<string> addresses)
+        public CountOperator(int id, string name, List<string> inputSource, RoutingOption routing, int replicas, List<string> addresses)
             : base(id, name, inputSource, routing, replicas, addresses)
         {
 
