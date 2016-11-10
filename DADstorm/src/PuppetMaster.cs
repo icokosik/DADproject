@@ -20,13 +20,16 @@ namespace DADstorm
         ArrayList machinesIP = new ArrayList();
         public PuppetMaster()
         {
+        }
+
+        public void start() {
             Thread consoleProcess = new Thread(new ThreadStart(runConsole));
             consoleProcess.Start();
-            
-            Logging log= new Logging(logging);
+
+            Logging log = new Logging(logging);
             Thread loggingProcess = new Thread(new ThreadStart(log.run));
             //loggingProcess.Start();
-        }
+            ; }
 
         public void runConsole()
         {

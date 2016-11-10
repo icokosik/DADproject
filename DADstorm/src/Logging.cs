@@ -11,7 +11,7 @@ namespace DADstorm.src
     class LoggingData: MarshalByRefObject
     {
         string senderName = "";
-        string senderMessage = ""; //command?
+        string senderMessage = "";  //probably will be changed
         // var tuples = list of tuples
 
         public LoggingData(string senderName, string senderMessage) {
@@ -24,17 +24,12 @@ namespace DADstorm.src
         }
     }
 
-
-
-
-
-
+    
     class Logging
     {
-        
-        public Logging(LoggingLevel logg) {
-            TcpChannel channel2 = new TcpChannel();
-            ChannelServices.RegisterChannel(channel2, true);
+          public Logging(LoggingLevel logg) {
+          //  TcpChannel channel2 = new TcpChannel();
+          //  ChannelServices.RegisterChannel(channel2, true);
             
         }
 
@@ -53,6 +48,7 @@ namespace DADstorm.src
              //test -end
         }
 
+        // logs will be downloading from nodes
         public void getData()
         {
             
@@ -61,7 +57,7 @@ namespace DADstorm.src
             
                 obj = (LoggingData)Activator.GetObject(
                     typeof(LoggingData),
-                    "tcp://localhost:8086/HelloService");
+                    "tcp://localhost:8086/loggingdata");
            
             if (obj == null)
             {
@@ -72,6 +68,10 @@ namespace DADstorm.src
                 Console.WriteLine("test");
             }
         }
+
+
+        //logs will be wroten into txt files (probably)
+        public void saveData() { }
     }
     
 }
