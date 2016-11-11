@@ -14,7 +14,7 @@ namespace DADstorm
 
         }
 
-        public override bool checkInput(Tuple t)
+        public override bool checkInput()
         {
             throw new NotImplementedException();
         }

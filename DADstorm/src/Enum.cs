@@ -15,9 +15,14 @@ namespace DADstorm
     {
         UNIQ, COUNT, DUP, FILTER, CUSTOM
     };
-
+    
     public enum LoggingLevel
     {
         FULL, LIGHT
+    }
+
+    public enum FilterCondition
+    {
+        EQUALS, SMALLER, GREATER
     };
 }

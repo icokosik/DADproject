@@ -18,7 +18,7 @@ namespace DADstorm
             passedItems = new List<Object>();
         }
 
-        public override bool checkInput(Tuple t)
+        public override bool checkInput()
         {
             if (t.getSize()-1 < fieldNumber) return false;
             return true;

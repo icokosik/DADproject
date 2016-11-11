@@ -16,19 +16,19 @@ namespace DADstorm
 
         }
 
-        public override bool checkInput(Tuple t)
+        public override bool checkInput()
         {
             return true;
         }
 
         public override Tuple execute()
         {
-            if(!checkInput(input)) throw new InvalidInputException();
+            if(!checkInput()) throw new InvalidInputException();
             count++;
 
-            return new Tuple(new List<List<object>>
+            return new Tuple(new List<List<string>>
             {
-               new List<object> {count}
+               new List<string> {""+count}
             });
         }
     }

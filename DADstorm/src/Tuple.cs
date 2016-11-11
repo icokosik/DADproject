@@ -8,14 +8,16 @@ namespace DADstorm
 {
     public class Tuple
     {
-        private List<List<Object>> items;
+        public static Tuple EMPTY = new Tuple(new List<List<string>>());
 
-        public Tuple(List<List<Object>> items)
+        private List<List<string>> items;
+
+        public Tuple(List<List<string>> items)
         {
             this.items = items;   
         }
 
-        public List<List<Object>> getItems()
+        public List<List<string>> getItems()
         {
             return items;
         }
@@ -23,6 +25,11 @@ namespace DADstorm
         public int getSize()
         {
             return items.Count();
+        }
+
+        public string get(int index)
+        {
+            return items[index];
         }
 
         public override string ToString()

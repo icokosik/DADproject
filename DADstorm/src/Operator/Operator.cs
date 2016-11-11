@@ -18,7 +18,7 @@ namespace DADstorm
         protected List<string> addresses;
         protected Tuple input;
 
-        public abstract bool checkInput(Tuple t);
+        public abstract bool checkInput();
         public abstract Tuple execute();
 
         public Operator(int id, string name, List<string> inputSource, RoutingOption routing, int replicas, List<string> addresses)
