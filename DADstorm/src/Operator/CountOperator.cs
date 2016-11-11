@@ -26,9 +26,9 @@ namespace DADstorm
             if(!checkInput(input)) throw new InvalidInputException();
             count++;
 
-            return new Tuple(new List<List<object>>
+            return new Tuple(new List<string>
             {
-               new List<object> {count}
+               count.ToString()
             });
         }
     }

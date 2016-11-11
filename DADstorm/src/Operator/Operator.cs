@@ -45,7 +45,7 @@ namespace DADstorm
         // TODO: Diana
         public void connectToInput()
         {
-            List<List<Object>> listItems = new List<List<Object>>(); 
+            List<string> listItems = new List<string>(); 
             
 
             //inputSource.Add("D:\\followers.dat");
@@ -75,18 +75,16 @@ namespace DADstorm
                             if ((!String.Equals(line[0].ToString(), "%")))
                             {
                                 string[] fields=line.Split(',');
-                                List<Object> tmp2 = new List<Object>();
                                 foreach(string item in fields)
                                 {
-                                    tmp2.Add(item);
-
-                                } 
-                                listItems.Add(tmp2);
+                                    listItems.Add(item);
+                                }
+                                input = new Tuple(listItems);
+                                //execute operator
                             }
                         }
                     }
                     file.Close();
-                    //input = new Tuple(listItems);
                 }
             }
  

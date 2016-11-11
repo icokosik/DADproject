@@ -8,14 +8,14 @@ namespace DADstorm
 {
     public class Tuple
     {
-        private List<List<Object>> items;
+        private List<string> items;
 
-        public Tuple(List<List<Object>> items)
+        public Tuple(List<string> items)
         {
             this.items = items;   
         }
 
-        public List<List<Object>> getItems()
+        public List<string> getItems()
         {
             return items;
         }
