@@ -8,7 +8,7 @@ namespace DADstorm
 {
     public class DupOperator : Operator
     {
-        public DupOperator(int id, string name, int inputSource, RoutingOption routing, int replicas, List<string> addresses)
+        public DupOperator(int id, string name, List<string> inputSource, RoutingOption routing, int replicas, List<string> addresses)
             : base(id, name, inputSource, routing, replicas, addresses)
         {
 

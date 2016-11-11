@@ -4,14 +4,34 @@ using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.Remoting.Channels.Tcp;
+using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting;
+using System.Threading;
+using DADstorm.src;
 
 namespace DADstorm
 {
     public class PuppetMaster
     {
+        LoggingLevel logging = LoggingLevel.LIGHT;
         ArrayList mainCMD;
         ArrayList allCMDinfile;
+        ArrayList machinesIP = new ArrayList();
         public PuppetMaster()
+        {
+        }
+
+        public void start() {
+            Thread consoleProcess = new Thread(new ThreadStart(runConsole));
+            consoleProcess.Start();
+
+            Logging log = new Logging(logging);
+            Thread loggingProcess = new Thread(new ThreadStart(log.run));
+            //loggingProcess.Start();
+            ; }
+
+        public void runConsole()
         {
             String inputString;
             while (true)
@@ -53,6 +73,11 @@ namespace DADstorm
                         break;
                     case "Load":
                         loadConfigFile();
+                        //start of test
+                        Console.WriteLine("IP of Machines:");
+                        foreach (var z in machinesIP)
+                            Console.WriteLine(z);
+                        //end of test
                         break;
                     case "Test":
                         test();
@@ -63,6 +88,7 @@ namespace DADstorm
                         break;
                 }
             }
+
         }
         public ArrayList mainCMDparser(string s)
         {
@@ -85,20 +111,20 @@ namespace DADstorm
         public void waitCMD(Int32 wait_ms) { }
         public void test()
         {
-            Tuple t1 = new Tuple(new List<object>
+            Tuple t1 = new Tuple(new List<List<object>>
             {
-                1, "test"
+               new List<object> {1, "test1"}
             });
-            Tuple t2 = new Tuple(new List<object>
+            Tuple t2 = new Tuple(new List<List<object>>
             {
-                1, "test2"
+                new List<object> {1, "test2"}
             });
-            Tuple t3 = new Tuple(new List<object>
+            Tuple t3 = new Tuple(new List<List<object>>
             {
-                1, "test2"
+                new List<object> {1, "test3"}
             });
-
-            Operator op = new DupOperator(1, "1", 0, RoutingOption.PRIMARY, 1, new List<string> { "dummyaddress" });
+            
+            Operator op = new CountOperator(1, "1", new List<string> { "0" }, RoutingOption.PRIMARY, 1, new List<string> { "dummyaddress" });
             op.setInput(t1);
             writeOutput(op.execute());
             op.setInput(t2);
@@ -136,6 +162,17 @@ namespace DADstorm
             return parseArray;
         }
 
+        public void addIPToMachines(string IPaddress)
+        {
+            string[] words = IPaddress.Split(':');
+            string builder = words[0] + ":" + words[1] + ":10000";
+            bool test = false;
+            foreach (var x in machinesIP)
+                if (String.Equals(x, builder))
+                    test = true;
+            if(test==false)
+                machinesIP.Add(builder);
+        }
         public void commandRecognizer()
         {
             //...every line of ArrayList
@@ -182,6 +219,9 @@ namespace DADstorm
         public void loggingLevel(ArrayList x)
         {
             string logginglevel_var = x[1].ToString();
+            if (String.Equals(logginglevel_var, "full"))
+                logging = LoggingLevel.FULL;
+            else logging = LoggingLevel.LIGHT;
         }
         public void interval(ArrayList x)
         {
@@ -272,17 +312,19 @@ namespace DADstorm
                 {
                     string input;
                     int counter = 0;
-                    ArrayList address_array = new ArrayList(); //array of Address-es
+                    ArrayList address_array = new ArrayList(); //array of Address-es //because of printing
                     do
                     {
                         input = Convert.ToString(x[i + counter + 1]);
                         string[] words2 = input.Split(',');
+                        addIPToMachines(words2[0]);
                         address_array.Add(words2[0]);
                         counter++;
                     } while (Convert.ToString(x[i + counter]).Contains(","));
                     //print
                     foreach (var u in address_array)
                         Console.WriteLine("----->address: " + u);
+                    
                 }
                 //operator spec OPERATOR_TYPE OPERATOR_PARAM1,. . ., OPERATOR_PARAMn
                 if ((String.Equals(Convert.ToString(x[i]), "operator")) && (String.Equals(Convert.ToString(x[i + 1]), "spec")))
@@ -326,6 +368,11 @@ Console.WriteLine("-----> input operator: {0}, field_number: {1}, condition: {2}
                 }
             }
             
+        }
+
+        public void newReplica()
+        {
+           
         }
     }
 }

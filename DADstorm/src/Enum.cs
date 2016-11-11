@@ -15,4 +15,9 @@ namespace DADstorm
     {
         UNIQ, COUNT, DUP, FILTER, CUSTOM
     };
+
+    public enum LoggingLevel
+    {
+        FULL, LIGHT
+    };
 }

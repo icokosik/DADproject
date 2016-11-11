@@ -11,7 +11,7 @@ namespace DADstorm
         private int fieldNumber;
         private List<Object> passedItems;
 
-        public UniqOperator(int id, string name, int inputSource, RoutingOption routing, int replicas, List<string> addresses, int fieldNumber)
+        public UniqOperator(int id, string name, List<string> inputSource, RoutingOption routing, int replicas, List<string> addresses, int fieldNumber)
             : base(id, name, inputSource, routing, replicas, addresses)
         {
             this.fieldNumber = fieldNumber;
