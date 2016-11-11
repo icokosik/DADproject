@@ -32,6 +32,11 @@ namespace DADstorm
             this.addresses = addresses;
         }
 
+        public Operator()
+        {
+            // TODO: Complete member initialization
+        }
+
         public void setInput(Tuple input)
         {
             this.input = input;
@@ -40,6 +45,10 @@ namespace DADstorm
         // TODO: Diana
         public void connectToInput()
         {
+            List<List<Object>> listItems = new List<List<Object>>(); 
+            
+
+            //inputSource.Add("D:\\followers.dat");
             foreach(string tmp in inputSource)
             {
                 if (Regex.IsMatch(tmp, "^OP\\d+$")) //operator in format OP1, OP2, ..., OPn
@@ -52,7 +61,32 @@ namespace DADstorm
                 }
                 else // input file
                 {
- 
+
+                    string line;
+                    //path
+                    System.IO.StreamReader file = new System.IO.StreamReader(tmp);
+                    //
+                    while ((line = file.ReadLine()) != null)
+                    {
+                        //if line is NOT empty
+                        if (line.Length != 0)
+                        {
+                            //if line is NOT comment
+                            if ((!String.Equals(line[0].ToString(), "%")))
+                            {
+                                string[] fields=line.Split(',');
+                                List<Object> tmp2 = new List<Object>();
+                                foreach(string item in fields)
+                                {
+                                    tmp2.Add(item);
+
+                                } 
+                                listItems.Add(tmp2);
+                            }
+                        }
+                    }
+                    file.Close();
+                    //input = new Tuple(listItems);
                 }
             }
  

@@ -21,7 +21,6 @@ namespace DADstorm
             Init initMachines = new Init();
             Thread initProcess = new Thread(new ThreadStart(initMachines.start));
             initProcess.Start();
-
         }
     }
 }
