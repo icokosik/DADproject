@@ -8,16 +8,16 @@ namespace DADstorm
 {
     public class Tuple
     {
-        public static Tuple EMPTY = new Tuple(new List<List<string>>());
+        public static Tuple EMPTY = new Tuple(new List<string>());
 
-        private List<List<string>> items;
+        private List<string> items;
 
-        public Tuple(List<List<string>> items)
+        public Tuple(List<string> items)
         {
             this.items = items;   
         }
-
-        public List<List<string>> getItems()
+    
+        public List<string> getItems()
         {
             return items;
         }

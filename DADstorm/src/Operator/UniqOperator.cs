@@ -20,13 +20,13 @@ namespace DADstorm
 
         public override bool checkInput()
         {
-            if (t.getSize()-1 < fieldNumber) return false;
+            if (input.getSize()-1 < fieldNumber) return false;
             return true;
         }
 
         public override Tuple execute()
         {
-            if (!checkInput(input)) throw new InvalidInputException();
+            if (!checkInput()) throw new InvalidInputException();
             if (passedItems.Contains(input.getItems()[fieldNumber])) return null;
             passedItems.Add(input.getItems()[fieldNumber]);
             return input;

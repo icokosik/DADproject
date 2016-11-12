@@ -111,17 +111,17 @@ namespace DADstorm
         public void waitCMD(Int32 wait_ms) { }
         public void test()
         {
-            Tuple t1 = new Tuple(new List<List<string>>
+            Tuple t1 = new Tuple(new List<string>
             {
-               new List<string> {"1", "test1"}
+               "1", "test1"
             });
-            Tuple t2 = new Tuple(new List<List<string>>
+            Tuple t2 = new Tuple(new List<string>
             {
-                new List<string> {"1", "test2"}
+                "2", "test2"
             });
-            Tuple t3 = new Tuple(new List<List<string>>
+            Tuple t3 = new Tuple(new List<string>
             {
-                new List<string> {"1", "test3"}
+                "3", "test3"
             });
             
             Operator op = new FilterOperator(1, "1", new List<string> { "0" }, RoutingOption.PRIMARY, 1, new List<string> { "dummyaddress" }, 1, FilterCondition.EQUALS, "test2");
