@@ -1,137 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using System.Runtime.Remoting.Channels.Tcp;
-using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting;
-using System.Threading;
-using DADstorm.src;
 
 namespace DADstorm
 {
-    public class PuppetMaster
+    class ConfigFile
     {
-        LoggingLevel logging = LoggingLevel.LIGHT;
-        ArrayList mainCMD;
-        ArrayList allCMDinfile;
-        ArrayList machinesIP = new ArrayList();
-        public PuppetMaster()
+        public LoggingLevel logging = LoggingLevel.LIGHT;
+        List<Operator> operatorsArray = new List<Operator>();
+        List<string> allCMDinfile;
+
+        public ConfigFile()
         {
-        }
-
-        public void start() {
-            Thread consoleProcess = new Thread(new ThreadStart(runConsole));
-            consoleProcess.Start();
-
-            Logging log = new Logging(logging);
-            Thread loggingProcess = new Thread(new ThreadStart(log.run));
-            //loggingProcess.Start();
-            ; }
-
-        public void runConsole()
-        {
-            String inputString;
-            while (true)
-            {
-                Console.WriteLine("\n-->Commands:");
-                Console.WriteLine("Start -operator_id");
-                Console.WriteLine("Interval operator id x ms");
-                Console.WriteLine("Status");
-                Console.WriteLine("Crash processname");
-                Console.WriteLine("Freeze processname");
-                Console.WriteLine("Unfreeze processname");
-                Console.WriteLine("Wait x ms");
-                Console.WriteLine("Load (config file)");
-
-                inputString = Console.ReadLine();
-                mainCMD = mainCMDparser(inputString);
-                switch (Convert.ToString(mainCMD[0]))
-                {
-                    case "Start":
-                        start(mainCMD);
-                        break;
-                    case "Interval":
-                        interval(mainCMD);
-                        break;
-                    case "Status":
-                        status();
-                        break;
-                    case "Crash":
-                        crash(mainCMD);
-                        break;
-                    case "Freeze":
-                        freeze(mainCMD);
-                        break;
-                    case "Unfreeze":
-                        unfreeze(mainCMD);
-                        break;
-                    case "Wait":
-                        wait(mainCMD);
-                        break;
-                    case "Load":
-                        loadConfigFile();
-                        //start of test
-                        Console.WriteLine("IP of Machines:");
-                        foreach (var z in machinesIP)
-                            Console.WriteLine(z);
-                        //end of test
-                        break;
-                    case "Test":
-                        test();
-                        break;
-
-                    default:
-                        Console.WriteLine("Command doesn´t exist");
-                        break;
-                }
-            }
 
         }
-        public ArrayList mainCMDparser(string s)
-        {
-            ArrayList array = new ArrayList();
-            string[] words = s.Split(' ');
-            foreach (string word in words)
-                array.Add(word);
-            return array;
-        }
-
-
-
-        //PuppetMaster Commands !!!!!!!! IMPORTANT - waiting for the rest of program
-        public void startCMD(string operatorID) {}
-        public void intervalCMD(string operatorID,Int32 sleep_ms) { }
-        public void statusCMD() { }
-        public void crashCMD(string operatorID,string replicaID) { }
-        public void freezeCMD(string operatorID, string replicaID) { }
-        public void unfreezeCMD(string operatorID, string replicaID) { }
-        public void waitCMD(Int32 wait_ms) { }
-        public void test()
-        {
-            Task.Run(() =>
-            {
-                for(int i=0;i<100;i++)
-                {
-                    System.Console.WriteLine("int " + i);
-                }
-            });
-            Task.Run(() =>
-            {
-                for(int i=1000;i<1100;i++)
-                {
-                    System.Console.WriteLine("int " + i);
-                }
-            });
-        }
-
-        public void writeOutput(Tuple t)
-        {
-            System.Console.WriteLine(t);
-        }
-
 
         //CONFIG FILE
         public void loadConfigFile()
@@ -141,38 +25,101 @@ namespace DADstorm
             commandRecognizer();
         }
 
-        public ArrayList loadInputFile(string path)
-        {
-            BasicFileReader inputFile = new BasicFileReader(path);
-            return inputFile.returnFileArray();
-        }
 
-        public ArrayList parseLineToArray(string text)
+        public List<string> parseLineToArray(string text)
         {
-            ArrayList parseArray = new ArrayList();
+            List<string> parseArray = new List<string>();
             string[] words = text.Split(' ');
             foreach (string s in words)
                 parseArray.Add(s);
             return parseArray;
         }
 
-        public void addIPToMachines(string IPaddress)
+
+        //PuppetMaster Commands !!!!!!!! IMPORTANT - waiting for the rest of program
+        public void startCMD(string operatorID) { }
+        public void intervalCMD(string operatorID, Int32 sleep_ms) { }
+        public void statusCMD() { }
+        public void crashCMD(string operatorID, string replicaID) { }
+        public void freezeCMD(string operatorID, string replicaID) { }
+        public void unfreezeCMD(string operatorID, string replicaID) { }
+        public void waitCMD(Int32 wait_ms) { }
+        public void test()
         {
-            string[] words = IPaddress.Split(':');
-            string builder = words[0] + ":" + words[1] + ":10000";
-            bool test = false;
-            foreach (var x in machinesIP)
-                if (String.Equals(x, builder))
-                    test = true;
-            if(test==false)
-                machinesIP.Add(builder);
+            Task.Run(() =>
+            {
+                for (int i = 0; i < 100; i++)
+                {
+                    System.Console.WriteLine("int " + i);
+                }
+            });
+            Task.Run(() =>
+            {
+                for (int i = 1000; i < 1100; i++)
+                {
+                    System.Console.WriteLine("int " + i);
+                }
+            });
         }
+
+        //Commands made by Config File ---> pick data from commands
+        public void semantic(List<string> x)
+        {
+            string semantic_var = x[1].ToString();
+        }
+        public void loggingLevel(List<string> x)
+        {
+            string logginglevel_var = x[1].ToString();
+            if (String.Equals(logginglevel_var, "full"))
+                logging = LoggingLevel.FULL;
+            else logging = LoggingLevel.LIGHT;
+        }
+        public void interval(List<string> x)
+        {
+            string operatorID = x[1].ToString();
+            Int32 sleep_ms = Convert.ToInt32(x[2].ToString());
+            intervalCMD(operatorID, sleep_ms);
+        }
+        public void status()
+        {
+            //STATUS of all nodes
+        }
+        public void start(List<string> x)
+        {
+            string operatorID = x[1].ToString();
+            startCMD(operatorID);
+        }
+        public void crash(List<string> x)
+        {
+            string operatorID = x[1].ToString();
+            string replicaID = x[2].ToString();
+            crashCMD(operatorID, replicaID);
+        }
+        public void freeze(List<string> x)
+        {
+            string operatorID = x[1].ToString();
+            string replicaID = x[2].ToString();
+            freezeCMD(operatorID, replicaID);
+        }
+        public void wait(List<string> x)
+        {
+            Int32 wait_ms = Convert.ToInt32(x[1].ToString());
+            waitCMD(wait_ms);
+        }
+        public void unfreeze(List<string> x)
+        {
+            string operatorID = x[1].ToString();
+            string replicaID = x[2].ToString();
+            unfreezeCMD(operatorID, replicaID);
+        }
+
+
         public void commandRecognizer()
         {
             //...every line of ArrayList
             foreach (string line in allCMDinfile)
             {
-                ArrayList x = parseLineToArray(line);
+                List<string> x = parseLineToArray(line);
 
                 //header
                 if (line.Contains("Semantics"))
@@ -202,72 +149,23 @@ namespace DADstorm
                 if (line.Contains("Unfreeze"))
                     unfreeze(x);
             }
-
         }
 
-        //Commands made by Config File ---> pick data from commands
-        public void semantic(ArrayList x)
-        {
-            string semantic_var = x[1].ToString();
-        }
-        public void loggingLevel(ArrayList x)
-        {
-            string logginglevel_var = x[1].ToString();
-            if (String.Equals(logginglevel_var, "full"))
-                logging = LoggingLevel.FULL;
-            else logging = LoggingLevel.LIGHT;
-        }
-        public void interval(ArrayList x)
-        {
-            string operatorID = x[1].ToString();
-            Int32 sleep_ms = Convert.ToInt32(x[2].ToString());
-            intervalCMD(operatorID, sleep_ms);
-        }
-        public void status()
-        {
-            //STATUS of all nodes
-        }
-        public void start(ArrayList x)
-        {
-            string operatorID = x[1].ToString();
-            startCMD(operatorID);
-        }
-        public void crash(ArrayList x)
-        {
-            string operatorID = x[1].ToString();
-            string replicaID = x[2].ToString();
-            crashCMD(operatorID, replicaID);
-        }
-        public void freeze(ArrayList x)
-        {
-            string operatorID = x[1].ToString();
-            string replicaID = x[2].ToString();
-            freezeCMD(operatorID, replicaID);
-        }
-        public void wait(ArrayList x)
-        {
-            Int32 wait_ms = Convert.ToInt32(x[1].ToString());
-            waitCMD(wait_ms);
-        }
-        public void unfreeze(ArrayList x)
-        {
-            string operatorID = x[1].ToString();
-            string replicaID = x[2].ToString();
-            unfreezeCMD(operatorID, replicaID);
-        }
+
+
 
 
 
 
         //Operator SET UP - from Config File Command
-        public void operatorsSetUp(ArrayList x)
+        public void operatorsSetUp(List<string> x)
         {
             //OPERATOR_ID input ops SOURCE_OP_ID1 | FILEPATH1,. . ., SOURCE_OP_IDn | FILEPATHn
             if (x.Count > 1)
                 if (String.Equals(Convert.ToString(x[1]), "input"))
                 {
                     string operator_id = Convert.ToString(x[0]);
-                    ArrayList operator_source = new ArrayList();
+                    List<string> operator_source = new List<string>();
                     string input;
                     int counter = 3;
                     do
@@ -278,6 +176,8 @@ namespace DADstorm
                         counter++;
                     } while (Convert.ToString(x[counter]).Contains(","));
 
+
+                    
                     //print
                     Console.WriteLine("\n----->operator ID: " + operator_id);
                     foreach (var u in operator_source)
@@ -306,19 +206,18 @@ namespace DADstorm
                 {
                     string input;
                     int counter = 0;
-                    ArrayList address_array = new ArrayList(); //array of Address-es //because of printing
+                    List<string> address_array = new List<string>(); //array of Address-es //because of printing
                     do
                     {
                         input = Convert.ToString(x[i + counter + 1]);
                         string[] words2 = input.Split(',');
-                        addIPToMachines(words2[0]);
                         address_array.Add(words2[0]);
                         counter++;
                     } while (Convert.ToString(x[i + counter]).Contains(","));
                     //print
                     foreach (var u in address_array)
                         Console.WriteLine("----->address: " + u);
-                    
+
                 }
                 //operator spec OPERATOR_TYPE OPERATOR_PARAM1,. . ., OPERATOR_PARAMn
                 if ((String.Equals(Convert.ToString(x[i]), "operator")) && (String.Equals(Convert.ToString(x[i + 1]), "spec")))
@@ -347,7 +246,8 @@ namespace DADstorm
                             inputText = Convert.ToString(x[i + 3]);
                             words3 = inputText.Split(',');
                             field_number = Convert.ToInt32(words3[0]);
-                            switch (words3[1]) {
+                            switch (words3[1])
+                            {
                                 case "<":
                                     condition = FilterCondition.SMALLER;
                                     break;
@@ -370,15 +270,12 @@ namespace DADstorm
                             break;
 
                     }
-Console.WriteLine("-----> input operator: {0}, field_number: {1}, condition: ENUM TYPE ???, value: {3}, dll: {4}, class: {5}, method: {6}", inputOperator, field_number, value, dll, classvar, method);
+
+                    Console.WriteLine("-----> input operator: {0}, field_number: {1}, condition: ENUM TYPE ???, value: {3}, dll: {4}, class: {5}, method: {6}", inputOperator, field_number, value, dll, classvar, method);
                 }
             }
-            
-        }
 
-        public void newReplica()
-        {
-           
+
         }
     }
 }
