@@ -100,5 +100,10 @@ namespace DADstorm
             return Environment.CurrentDirectory;
         }
 
+        public string Hello()
+        {
+            return "Hello";
+        }
+
     }
 }

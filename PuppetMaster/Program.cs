@@ -14,12 +14,37 @@ namespace DADstorm
     {
         static void Main(string[] args)
         {
+
+            //mathias start
             Console.WriteLine("PupperMaster");
             Operator op = new UniqOperator(0, "0", new List<string>(), RoutingOption.PRIMARY, 1, new List<string>(), 0);
             Console.WriteLine();
-            Process.Start("..\\..\\..\\Operator\\bin\\Debug\\Operator.exe");
+
+            int portnumber = 100;
+            Process.Start("..\\..\\..\\Operator\\bin\\Debug\\Operator.exe", Convert.ToString(portnumber));
+            //mathias end
+
+
+
+
+
             TcpChannel channel = new TcpChannel();
             ChannelServices.RegisterChannel(channel, true);
+
+            Operator obj = (Operator)Activator.GetObject(
+                typeof(Operator),
+                "tcp://localhost:100/op");
+            if (obj == null)
+            {
+                System.Console.WriteLine("Could not locate server");
+            }
+            else
+            {
+                Console.WriteLine(obj.Hello());
+            }
+
+
+            Console.ReadLine();
         }
     }
 }
