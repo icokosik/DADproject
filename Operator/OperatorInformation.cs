@@ -16,7 +16,6 @@ namespace DADstorm
         public OperatorSpec type;
         public List<string> inputsource;
         public RoutingOption routing;
-        public Tuple input;
         /**
          * FilterOperator
          */

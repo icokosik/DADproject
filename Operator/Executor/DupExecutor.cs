@@ -8,21 +8,18 @@ namespace DADstorm
 {
     class DupExecutor : Executor
     {
-        private OperatorInformation information;
-        private Tuple input;
-
         public DupExecutor(OperatorInformation information)
         {
             this.information = information;
             this.input = Tuple.EMPTY;
         }
 
-        public bool checkInput()
+        public override bool checkInput()
         {
             return true;
         }
 
-        public Tuple execute()
+        public override Tuple execute()
         {
             return input;
         }

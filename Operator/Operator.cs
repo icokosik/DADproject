@@ -7,29 +7,13 @@ using System.Threading.Tasks;
 
 namespace DADstorm
 {
-    public abstract class Operator : MarshalByRefObject
+    public class Operator : MarshalByRefObject
     {
+        private IExecutor executor;
 
-        protected int id;
-        protected string name;
-        protected List<string> inputSource;
-        protected RoutingOption routing;
-        protected int replicas;
-        protected List<string> addresses;
-        protected Tuple input;
-
-        public abstract bool checkInput();
-        public abstract Tuple execute();
-
-        public Operator(int id, string name, List<string> inputSource, RoutingOption routing, int replicas, List<string> addresses)
+        public Operator(IExecutor executor)
         {
-            // TODO: check id != inputsource
-            this.id = id;
-            this.name = name;
-            this.inputSource = inputSource;
-            this.routing = routing;
-            this.replicas = replicas;
-            this.addresses = addresses;
+            this.executor = executor;
         }
 
         public Operator()
@@ -39,7 +23,7 @@ namespace DADstorm
 
         public void setInput(Tuple input)
         {
-            this.input = input;
+            this.executor.setInput(input);
         }
 
         // TODO: Diana
@@ -49,7 +33,7 @@ namespace DADstorm
             
 
             //inputSource.Add("D:\\followers.dat");
-            foreach(string tmp in inputSource)
+            foreach(string tmp in this.getInformation().inputsource)
             {
                 if (Regex.IsMatch(tmp, "^OP\\d+$")) //operator in format OP1, OP2, ..., OPn
                 {
@@ -79,7 +63,7 @@ namespace DADstorm
                                 {
                                     listItems.Add(item);
                                 }
-                                input = new Tuple(listItems);
+                                setInput(new Tuple(listItems));
                                 //execute operator
                             }
                         }
@@ -95,9 +79,14 @@ namespace DADstorm
             return false;
         }
 
-        public string returnPath()
+        public Tuple getInput()
         {
-            return Environment.CurrentDirectory;
+            return this.executor.getInput();
+        }
+
+        public OperatorInformation getInformation()
+        {
+            return this.executor.getInformation();
         }
 
         public string Hello()

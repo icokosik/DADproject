@@ -6,9 +6,27 @@ using System.Threading.Tasks;
 
 namespace DADstorm
 {
-    public interface Executor
+    public abstract class Executor : IExecutor
     {
-        bool checkInput();
-        Tuple execute();
+        protected Tuple input;
+        protected OperatorInformation information;
+
+        public abstract bool checkInput();
+        public abstract Tuple execute();
+
+        public Tuple getInput()
+        {
+            return input;
+        }
+
+        public void setInput(Tuple input)
+        {
+            this.input = input;
+        }
+
+        public OperatorInformation getInformation()
+        {
+            return information;
+        }
     }
 }

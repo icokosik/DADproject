@@ -49,19 +49,15 @@
   <ItemGroup>
     <Compile Include="Enum.cs" />
     <Compile Include="Exception\InvalidInputException.cs" />
-    <Compile Include="OperatorExecutor\CountExecutor.cs" />
-    <Compile Include="OperatorExecutor\CustomExecutor.cs" />
-    <Compile Include="OperatorExecutor\DupExecutor.cs" />
-    <Compile Include="OperatorExecutor\Executor.cs" />
-    <Compile Include="OperatorExecutor\FilterExecutor.cs" />
-    <Compile Include="OperatorExecutor\UniqExecutor.cs" />
+    <Compile Include="Executor\CountExecutor.cs" />
+    <Compile Include="Executor\CustomExecutor.cs" />
+    <Compile Include="Executor\DupExecutor.cs" />
+    <Compile Include="Executor\Executor.cs" />
+    <Compile Include="Executor\IExecutor.cs" />
+    <Compile Include="Executor\FilterExecutor.cs" />
+    <Compile Include="Executor\UniqExecutor.cs" />
     <Compile Include="OperatorInformation.cs" />
-    <Compile Include="Operator\CountOperator.cs" />
-    <Compile Include="Operator\CustomOperator.cs" />
-    <Compile Include="Operator\DupOperator.cs" />
-    <Compile Include="Operator\FilterOperator.cs" />
-    <Compile Include="Operator\Operator.cs" />
-    <Compile Include="Operator\UniqOperator.cs" />
+    <Compile Include="Operator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Tuple.cs" />

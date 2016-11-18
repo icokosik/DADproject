@@ -8,8 +8,6 @@ namespace DADstorm
 {
     class CountExecutor : Executor
     {
-        private OperatorInformation information;
-        private Tuple input;
         private int counter;
 
         public CountExecutor(OperatorInformation information)
@@ -19,12 +17,12 @@ namespace DADstorm
             this.counter = 0;
         }
 
-        public bool checkInput()
+        public override bool checkInput()
         {
             return true;
         }
 
-        public Tuple execute()
+        public override Tuple execute()
         {
             if (!checkInput()) throw new InvalidInputException();
             counter++;
@@ -33,6 +31,5 @@ namespace DADstorm
                counter.ToString()
             });
         }
-
     }
 }

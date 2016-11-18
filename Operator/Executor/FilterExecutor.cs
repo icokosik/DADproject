@@ -8,9 +8,6 @@ namespace DADstorm
 {
     class FilterExecutor : Executor
     {
-        private OperatorInformation information;
-        private Tuple input;
-
         public FilterExecutor(OperatorInformation information)
         {
             this.information = information;
@@ -22,13 +19,13 @@ namespace DADstorm
             this.input = input;
         }
 
-        public bool checkInput()
+        public override bool checkInput()
         {
             if (input.getSize() - 1 < information.fieldnumber) return false;
             return true;
         }
 
-        public Tuple execute()
+        public override Tuple execute()
         {
             switch (information.condition)
             {

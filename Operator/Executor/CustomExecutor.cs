@@ -6,23 +6,20 @@ using System.Threading.Tasks;
 
 namespace DADstorm.OperatorExecutor
 {
-    class CustomExecutor
-    {
-        private OperatorInformation information;
-        private Tuple input;
-
+    class CustomExecutor : Executor
+    { 
         public CustomExecutor(OperatorInformation information)
         {
             this.information = information;
             this.input = Tuple.EMPTY;
         }
 
-        public bool checkInput()
+        public override bool checkInput()
         {
             throw new NotImplementedException();
         }
 
-        public Tuple execute()
+        public override Tuple execute()
         {
             throw new NotImplementedException();
         }

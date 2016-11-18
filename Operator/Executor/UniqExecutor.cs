@@ -8,8 +8,6 @@ namespace DADstorm
 {
     class UniqExecutor : Executor
     {
-        private OperatorInformation information;
-        private Tuple input;
         private List<string> passedItems;
 
         public UniqExecutor(OperatorInformation information)
@@ -19,13 +17,13 @@ namespace DADstorm
             this.passedItems = new List<string>();
         }
 
-        public bool checkInput()
+        public override bool checkInput()
         {
             if (input.getSize() - 1 < information.fieldnumber) return false;
             return true;
         }
 
-        public Tuple execute()
+        public override Tuple execute()
         {
             if (!checkInput()) throw new InvalidInputException();
             if (passedItems.Contains(input.getItems()[information.fieldnumber])) return null;
