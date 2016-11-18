@@ -14,15 +14,17 @@ namespace DADstorm
         static void Main(string[] args)
         {
             Console.WriteLine("Operator");
-            Console.ReadLine();
-            TcpChannel channel = new TcpChannel(10000);
-
+            Console.WriteLine("arg: " + args[0]);
+            Console.WriteLine("Establishing connection with PuppetMaster...");
+            int puppetMasterPort = Int32.Parse(args[0]);
+            TcpChannel channel = new TcpChannel(puppetMasterPort);
             ChannelServices.RegisterChannel(channel, true);
             RemotingConfiguration.RegisterWellKnownServiceType(
                 typeof(Operator),
                 "op",
                 WellKnownObjectMode.Singleton);
-        }
 
+            Console.ReadLine();
+        }
     }
 }
