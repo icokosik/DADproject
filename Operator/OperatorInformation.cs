@@ -11,24 +11,15 @@ namespace DADstorm
         /**
          * Basic Operator information
          */
-<<<<<<< Updated upstream
-        public int id;
-        public string name;
         public OperatorSpec type;
         public List<string> inputsource;
         public RoutingOption routing;
-=======
         public static int id;
         public static string name;
-        public List<string> inputsource;
         public static int repl_factor;
-        public RoutingOption routing;
         List<string> address_array;
-        public OperatorSpec type;
-
 
         public Tuple input;
->>>>>>> Stashed changes
         /**
          * FilterOperator
          */
@@ -38,23 +29,18 @@ namespace DADstorm
         /**
          * CustomOperator
          */
-<<<<<<< Updated upstream
-        public string dllLocation;
-        public string className;
-        public string method;
-=======
         public static string dllLocation;
         public static string className;
         public static string method;
 
         public OperatorInformation() { }
-        public OperatorInformation(string name2, List<string> inputsource,int repl_factor2,RoutingOption routing, List<string> address_array,OperatorSpec type,int fieldnumber2,string value2, FilterCondition condition2, string dllLocation2,string className2, string method2) {
+        public OperatorInformation(string name2, List<string> inputsource2,int repl_factor2,RoutingOption routing2, List<string> address_array2,OperatorSpec type2,int fieldnumber2,string value2, FilterCondition condition2, string dllLocation2,string className2, string method2) {
             name = name2;
-            this.inputsource = inputsource;
+            inputsource = inputsource2;
             repl_factor = repl_factor2;
-            this.routing = routing;
-            this.address_array = address_array;
-            this.type = type;
+            routing = routing2;
+            address_array = address_array2;
+            type = type2;
 
             fieldnumber = fieldnumber2;
             value = value2;
@@ -65,7 +51,6 @@ namespace DADstorm
             method = method2;
         }
 
->>>>>>> Stashed changes
     }
 
 }
