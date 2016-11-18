@@ -11,23 +11,23 @@ namespace DADstorm
         /**
          * Basic Operator information
          */
-        public static int id;
-        public static string name;
+        public int id;
+        public string name;
         public OperatorSpec type;
-        public static List<string> inputsource;
-        public static RoutingOption routing;
-        public static Tuple input;
+        public List<string> inputsource;
+        public RoutingOption routing;
+        public Tuple input;
         /**
          * FilterOperator
          */
-        public static int fieldnumber;
-        public static string value;
-        public static FilterCondition condition;
+        public int fieldnumber;
+        public string value;
+        public FilterCondition condition;
         /**
          * CustomOperator
          */
-        public static string dllLocation;
-        public static string className;
-        public static string method;
+        public string dllLocation;
+        public string className;
+        public string method;
     }
 }

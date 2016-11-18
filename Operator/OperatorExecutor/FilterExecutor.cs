@@ -4,37 +4,48 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DADstorm.OperatorExecutive
+namespace DADstorm
 {
-    class FilterExecutive : Executive
+    class FilterExecutor : Executor
     {
         private OperatorInformation information;
         private Tuple input;
 
+        public FilterExecutor(OperatorInformation information)
+        {
+            this.information = information;
+            input = Tuple.EMPTY;
+        }
+
+        public void setInput(Tuple input)
+        {
+            this.input = input;
+        }
+
         public bool checkInput()
         {
-            if (input.getSize() - 1 < OperatorInformation.fieldnumber) return false;
+            if (input.getSize() - 1 < information.fieldnumber) return false;
             return true;
         }
 
         public Tuple execute()
         {
-            switch (OperatorInformation.condition)
+            switch (information.condition)
             {
                 case FilterCondition.EQUALS:
-                    if (input.get(OperatorInformation.fieldnumber).CompareTo(OperatorInformation.value) == 0)
+                    if (input.get(information.fieldnumber).CompareTo(information.value) == 0)
                     {
                         return input;
                     }
                     break;
                 case FilterCondition.GREATER:
-                    if (input.get(OperatorInformation.fieldnumber).CompareTo(OperatorInformation.value) > 0)
+                    if (input.get(information.fieldnumber).CompareTo(information.value) > 0)
                     {
                         return input;
                     }
                     break;
                 case FilterCondition.SMALLER:
-                    if (input.get(OperatorInformation.fieldnumber).CompareTo(OperatorInformation.value) < 0)
+                    if (input.get(information.fieldnumber).CompareTo(information.value) < 0)
                     {
                         return input;
                     }
