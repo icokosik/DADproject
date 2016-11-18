@@ -16,9 +16,9 @@ namespace DADstorm
             this.executor = executor;
         }
 
-        public Operator()
+        public Tuple execute()
         {
-            // TODO: Complete member initialization
+            return this.executor.execute();
         }
 
         public void setInput(Tuple input)
@@ -63,7 +63,7 @@ namespace DADstorm
                                 {
                                     listItems.Add(item);
                                 }
-                                setInput(new Tuple(listItems));
+                                executor.setInput(new Tuple(listItems));
                                 //execute operator
                             }
                         }

@@ -23,6 +23,8 @@ namespace DADstorm
 
         public static void getOperatorInformation(int port)
         {
+            test();
+
             Console.WriteLine("Establishing connection with PuppetMaster on port " + port);
             TcpChannel channel = new TcpChannel(port);
             ChannelServices.RegisterChannel(channel, true);
@@ -50,6 +52,21 @@ namespace DADstorm
                 case OperatorSpec.CUSTOM:
                     break;
             }
+        }
+
+        public static void test()
+        {
+            //TEST
+            OperatorInformation info = new OperatorInformation();
+            info.fieldnumber = 0;
+            info.value = "hai";
+            info.condition = FilterCondition.GREATER;
+            Operator op = new Operator(new FilterExecutor(info));
+            List<string> list = new List<string>(); list.Add("ha");
+            Tuple input = new Tuple(list);
+            op.setInput(input);
+            Console.WriteLine(op.execute().ToString());
+            //ENDTEST
         }
     }
 }
