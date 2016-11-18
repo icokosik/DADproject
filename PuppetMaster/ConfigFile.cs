@@ -9,7 +9,7 @@ namespace DADstorm
     class ConfigFile
     {
         public LoggingLevel logging = LoggingLevel.LIGHT;
-        List<Operator> operatorsArray = new List<Operator>();
+        List<OperatorInformation> operatorsArray = new List<OperatorInformation>();
         List<string> allCMDinfile;
 
         public ConfigFile()
@@ -160,12 +160,22 @@ namespace DADstorm
         //Operator SET UP - from Config File Command
         public void operatorsSetUp(List<string> x)
         {
+            string operator_id, routingfunction, value, dllLocation, className, method, inputText;
+            operator_id = routingfunction = value = dllLocation = className = method = inputText = "";
+            int field_number =0; 
+            int repl_factor=0;
+            int routingnumber = 0;
+            FilterCondition condition=FilterCondition.EQUALS;
+            RoutingOption routing=RoutingOption.PRIMARY;
+            OperatorSpec type=OperatorSpec.COUNT;
+            List<string> operator_source = new List<string>();
+            List<string> address_array= new List<string>();
+            
             //OPERATOR_ID input ops SOURCE_OP_ID1 | FILEPATH1,. . ., SOURCE_OP_IDn | FILEPATHn
             if (x.Count > 1)
                 if (String.Equals(Convert.ToString(x[1]), "input"))
                 {
-                    string operator_id = Convert.ToString(x[0]);
-                    List<string> operator_source = new List<string>();
+                    operator_id = Convert.ToString(x[0]);
                     string input;
                     int counter = 3;
                     do
@@ -189,15 +199,30 @@ namespace DADstorm
                 //rep fact REPL_FACTOR routing primary|hashing|random
                 if ((String.Equals(Convert.ToString(x[i]), "rep")) && (String.Equals(Convert.ToString(x[i + 1]), "fact")))
                 {
-                    Int32 repl_factor = Convert.ToInt32(x[i + 2]); //number of replicas
-                    Int32 routingnumber = 0;
+                    repl_factor = Convert.ToInt32( x[i + 2]); //number of replicas
+                    routingnumber = 0;
                     string routinginput = Convert.ToString(x[i + 4]);
                     char[] delimiterChars = { '(', ')' };
                     string[] words = routinginput.Split(delimiterChars);
-                    string routingfunction = words[0];  //name of routing function
-                    if (String.Equals(routingfunction, "hashing"))
-                        routingnumber = Convert.ToInt32(words[1]); //set up value, if HASH function
+                    routingfunction = words[0];  //name of routing function
+
+                    switch(routingfunction)
+                    {
+                        case "hashing":
+                            routing = RoutingOption.HASHING;
+                            routingnumber = Convert.ToInt32(words[1]);
+                            break;
+                        case "primary":
+                            routing = RoutingOption.PRIMARY;
+                            break;
+                        case "random":
+                            routing = RoutingOption.RANDOM;
+                            break;
+                        default:
+                            break;
+                    }
                     //print
+
                     Console.WriteLine("----->Repl factor: " + repl_factor + " Route-type: " + routingfunction + " Route-number: " + routingnumber);
                 }
 
@@ -206,7 +231,6 @@ namespace DADstorm
                 {
                     string input;
                     int counter = 0;
-                    List<string> address_array = new List<string>(); //array of Address-es //because of printing
                     do
                     {
                         input = Convert.ToString(x[i + counter + 1]);
@@ -223,10 +247,7 @@ namespace DADstorm
                 if ((String.Equals(Convert.ToString(x[i]), "operator")) && (String.Equals(Convert.ToString(x[i + 1]), "spec")))
                 {
                     string inputOperator = Convert.ToString(x[i + 2]); //name of input operator
-                    Int32 field_number = 0;
-                    FilterCondition condition;
-                    string value, dll, classvar, method, inputText;
-                    value = dll = classvar = method = inputText = "";
+                    
                     string[] words3;
 
                     switch (inputOperator)
@@ -235,11 +256,15 @@ namespace DADstorm
                             inputText = Convert.ToString(x[i + 3]);
                             words3 = inputText.Split(',');
                             field_number = Convert.ToInt32(words3[0]);
+                            type = OperatorSpec.UNIQ;
                             break;
                         case "COUNT":
                             //?
+                            type = OperatorSpec.COUNT;
                             break;
                         case "DUP":
+                            type = OperatorSpec.DUP;
+
                             //?
                             break;
                         case "FILTER":
@@ -260,21 +285,23 @@ namespace DADstorm
                                 default: break;
                             }
                             value = words3[2];
+                            type = OperatorSpec.FILTER;
                             break;
                         case "CUSTOM":
                             inputText = Convert.ToString(x[i + 3]);
                             words3 = inputText.Split(',');
-                            dll = words3[0];
-                            classvar = words3[1];
+                            dllLocation = words3[0];
+                            className = words3[1];
                             method = words3[2];
+                            type = OperatorSpec.CUSTOM;
                             break;
 
                     }
-
-                    Console.WriteLine("-----> input operator: {0}, field_number: {1}, condition: ENUM TYPE ???, value: {3}, dll: {4}, class: {5}, method: {6}", inputOperator, field_number, value, dll, classvar, method);
                 }
             }
 
+            //add operator to list
+            operatorsArray.Add(new OperatorInformation(operator_id,operator_source,repl_factor, routing, address_array,type,field_number,value,condition,dllLocation,className,method));
 
         }
     }
