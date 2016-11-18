@@ -26,7 +26,7 @@ namespace DADstorm
             while ((line = file.ReadLine()) != null)
             {
                 //if line is NOT empty
-                if (line.Length != 0)
+                   if (line.Length != 0)
                 {
                     //if line is NOT comment
                     if ((!String.Equals(line[0].ToString(), "%")))

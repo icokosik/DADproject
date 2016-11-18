@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace DADstorm
 {
-    public abstract class Operator
+    public abstract class Operator : MarshalByRefObject
     {
 
         protected int id;
@@ -93,6 +93,11 @@ namespace DADstorm
         public bool connectionToInput()
         {
             return false;
+        }
+
+        public string returnPath()
+        {
+            return Environment.CurrentDirectory;
         }
 
     }

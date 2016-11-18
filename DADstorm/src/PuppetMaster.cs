@@ -111,26 +111,20 @@ namespace DADstorm
         public void waitCMD(Int32 wait_ms) { }
         public void test()
         {
-            Tuple t1 = new Tuple(new List<string>
+            Task.Run(() =>
             {
-               "1", "test1"
+                for(int i=0;i<100;i++)
+                {
+                    System.Console.WriteLine("int " + i);
+                }
             });
-            Tuple t2 = new Tuple(new List<string>
+            Task.Run(() =>
             {
-                "2", "test2"
+                for(int i=1000;i<1100;i++)
+                {
+                    System.Console.WriteLine("int " + i);
+                }
             });
-            Tuple t3 = new Tuple(new List<string>
-            {
-                "3", "test3"
-            });
-            
-            Operator op = new FilterOperator(1, "1", new List<string> { "0" }, RoutingOption.PRIMARY, 1, new List<string> { "dummyaddress" }, 1, FilterCondition.EQUALS, "test2");
-            op.setInput(t1);
-            writeOutput(op.execute());
-            op.setInput(t2);
-            writeOutput(op.execute());
-            op.setInput(t3);
-            writeOutput(op.execute());
         }
 
         public void writeOutput(Tuple t)
