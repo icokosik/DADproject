@@ -13,7 +13,7 @@ namespace DADstorm
          */
         public static int id;
         public static string name;
-        public static OperatorSpec type;
+        public OperatorSpec type;
         public static List<string> inputsource;
         public static RoutingOption routing;
         public static Tuple input;

@@ -11,20 +11,45 @@ namespace DADstorm
 {
     public class Program
     {
+        public static OperatorInformation information;
+
         static void Main(string[] args)
         {
-            Console.WriteLine("Operator");
-            Console.WriteLine("arg: " + args[0]);
-            Console.WriteLine("Establishing connection with PuppetMaster...");
             int puppetMasterPort = Int32.Parse(args[0]);
-            TcpChannel channel = new TcpChannel(puppetMasterPort);
+            getOperatorInformation(puppetMasterPort);
+            CheckOperatorInformation();
+            Console.ReadLine();
+        }
+
+        public static void getOperatorInformation(int port)
+        {
+            Console.WriteLine("Establishing connection with PuppetMaster on port " + port);
+            TcpChannel channel = new TcpChannel(port);
             ChannelServices.RegisterChannel(channel, true);
             RemotingConfiguration.RegisterWellKnownServiceType(
                 typeof(Operator),
                 "op",
                 WellKnownObjectMode.Singleton);
 
-            Console.ReadLine();
+            // Receive OperatorInformation
+            information = new OperatorInformation();
+        }
+
+        public static void CheckOperatorInformation()
+        {
+            switch(information.type)
+            {
+                case OperatorSpec.COUNT:
+                    break;
+                case OperatorSpec.DUP:
+                    break;
+                case OperatorSpec.FILTER:
+                    break;
+                case OperatorSpec.UNIQ:
+                    break;
+                case OperatorSpec.CUSTOM:
+                    break;
+            }
         }
     }
 }

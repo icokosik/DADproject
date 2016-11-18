@@ -49,6 +49,9 @@
   <ItemGroup>
     <Compile Include="Enum.cs" />
     <Compile Include="Exception\InvalidInputException.cs" />
+    <Compile Include="OperatorExecutive\Executive.cs" />
+    <Compile Include="OperatorExecutive\FilterExecutive.cs" />
+    <Compile Include="OperatorInformation.cs" />
     <Compile Include="Operator\CountOperator.cs" />
     <Compile Include="Operator\CustomOperator.cs" />
     <Compile Include="Operator\DupOperator.cs" />
