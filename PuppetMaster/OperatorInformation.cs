@@ -13,9 +13,9 @@ namespace DADstorm
          */
         public static int id;
         public static string name;
+        public OperatorSpec type;
         public static List<string> inputsource;
         public static RoutingOption routing;
-        public static int replicas;
         public static Tuple input;
         /**
          * FilterOperator
