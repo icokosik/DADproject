@@ -19,32 +19,22 @@ namespace DADstorm
             int puppetMasterPort = Int32.Parse(args[0]);
             getOperatorInformation(puppetMasterPort);
             CheckOperatorInformation();
-
-          
-           /*
-                RemotingConfiguration.RegisterWellKnownServiceType(
-                  typeof(SharedClass),
-                  "Operator",
-                  WellKnownObjectMode.Singleton);
-            */
-            //
+            
+            
             Console.ReadLine();
         }
 
         public static void getOperatorInformation(int port)
         {
             test();
-
             Console.WriteLine("Establishing connection with PuppetMaster on port " + port);
             TcpChannel channel = new TcpChannel(port);
-            //            ChannelServices.RegisterChannel(channel, true);
-
             
              RemotingConfiguration.RegisterWellKnownServiceType(
              typeof(Operator),
                             "op",
                             WellKnownObjectMode.Singleton);
-            
+
             // Receive OperatorInformation
             information = new OperatorInformation();
         }
@@ -74,7 +64,8 @@ namespace DADstorm
             info.value = "hai";
             info.condition = FilterCondition.GREATER;
             Operator op = new Operator(new FilterExecutor(info));
-            List<string> list = new List<string>(); list.Add("ha");
+            List<string> list = new List<string>();
+            list.Add("ha");
             Tuple input = new Tuple(list);
             op.setInput(input);
             Console.WriteLine(op.execute().ToString());

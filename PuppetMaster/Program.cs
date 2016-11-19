@@ -21,7 +21,7 @@ namespace DADstorm
         static void Main(string[] args)
         {
             TcpChannel channel = new TcpChannel();
-            ChannelServices.RegisterChannel(channel, true);
+            ChannelServices.RegisterChannel(channel, false);
 
             loadConfigFile();
             
@@ -34,7 +34,7 @@ namespace DADstorm
                 t1.Start();
                 portnumber++;
             }
-
+            
             Console.WriteLine(Console.ReadLine());
             Console.ReadLine();
         }

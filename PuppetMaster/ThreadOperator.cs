@@ -20,9 +20,7 @@ namespace DADstorm
         {
             Process.Start("..\\..\\..\\Operator\\bin\\Debug\\Operator.exe", Convert.ToString(portnumber));
             string stringbuilder = "tcp://localhost:" + Convert.ToInt32(portnumber) + "/op";
-
-
-           
+            
             Operator obj = (Operator)Activator.GetObject(
                           typeof(Operator),
                           stringbuilder);
@@ -33,9 +31,9 @@ namespace DADstorm
             else
             {
                 Console.WriteLine("Connected...");
-              //Console.WriteLine(obj.getTestForIco());
+                obj.setTestForIco("test1");
+                Console.WriteLine(obj.getTestForIco());
             }
-            
 
         }
     }
