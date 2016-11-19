@@ -9,6 +9,7 @@ using System.Runtime.Remoting.Channels.Tcp;
 
 namespace DADstorm
 {
+    
     public class Program
     {
         public static OperatorInformation information;
@@ -18,6 +19,15 @@ namespace DADstorm
             int puppetMasterPort = Int32.Parse(args[0]);
             getOperatorInformation(puppetMasterPort);
             CheckOperatorInformation();
+
+          
+           /*
+                RemotingConfiguration.RegisterWellKnownServiceType(
+                  typeof(SharedClass),
+                  "Operator",
+                  WellKnownObjectMode.Singleton);
+            */
+            //
             Console.ReadLine();
         }
 
@@ -27,12 +37,14 @@ namespace DADstorm
 
             Console.WriteLine("Establishing connection with PuppetMaster on port " + port);
             TcpChannel channel = new TcpChannel(port);
-            ChannelServices.RegisterChannel(channel, true);
-            RemotingConfiguration.RegisterWellKnownServiceType(
-                typeof(Operator),
-                "op",
-                WellKnownObjectMode.Singleton);
+            //            ChannelServices.RegisterChannel(channel, true);
 
+            
+             RemotingConfiguration.RegisterWellKnownServiceType(
+             typeof(Operator),
+                            "op",
+                            WellKnownObjectMode.Singleton);
+            
             // Receive OperatorInformation
             information = new OperatorInformation();
         }
@@ -68,5 +80,32 @@ namespace DADstorm
             Console.WriteLine(op.execute().ToString());
             //ENDTEST
         }
+    }
+
+
+
+
+
+
+
+
+    // new class  ---- remoting
+    public class SharedClass : MarshalByRefObject
+    {
+        public string x = "text";
+        public SharedClass() : base()
+        {
+                showTestInConsole();
+        }
+        public string Hello()
+        {
+            return "Hello World!";
+        }
+        public void setText(string x)
+        { this.x = x; }
+        public string getText()
+        { return x; }
+        public void showTestInConsole()
+        { Console.WriteLine(x); }
     }
 }

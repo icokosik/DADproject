@@ -11,6 +11,7 @@ namespace DADstorm
         /**
          * Basic Operator information
          */
+        public static int port = 12000;
         public OperatorSpec type;
         public List<string> inputsource;
         public RoutingOption routing;
@@ -50,6 +51,12 @@ namespace DADstorm
             className = className2;
             method = method2;
         }
+
+        public void setPort(int input) {
+            port = input;
+        }
+        public int getPort()
+        { return port; }
 
     }
 

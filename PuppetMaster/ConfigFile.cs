@@ -14,7 +14,7 @@ namespace DADstorm
 
         public ConfigFile()
         {
-
+            loadConfigFile();
         }
 
         //CONFIG FILE
@@ -25,6 +25,14 @@ namespace DADstorm
             commandRecognizer();
         }
 
+        public List<OperatorInformation> returnOperatorsArray() {
+            return operatorsArray;
+        }
+        public LoggingLevel returnLogging()
+        {
+            return logging;
+        }
+         
 
         public List<string> parseLineToArray(string text)
         {

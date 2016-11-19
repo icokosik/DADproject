@@ -9,12 +9,15 @@ namespace DADstorm
 {
     public class Operator : MarshalByRefObject
     {
+        public string testforico = "Test 1";
         private IExecutor executor;
 
         public Operator(IExecutor executor)
         {
             this.executor = executor;
         }
+        public Operator()
+        { }
 
         public Tuple execute()
         {
@@ -89,10 +92,24 @@ namespace DADstorm
             return this.executor.getInformation();
         }
 
-        public string Hello()
+
+
+
+
+
+
+
+        // IGOR´s TEST
+        public string getTestForIco()
         {
-            return "Hello";
+            Console.WriteLine(testforico);
+            return testforico;
         }
+        public void setTestForIco(string x)
+        {
+            this.testforico = x;
+        }
+
 
     }
 }

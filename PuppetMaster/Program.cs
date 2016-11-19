@@ -7,46 +7,45 @@ using System.Threading.Tasks;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
+using System.Threading;
 
 namespace DADstorm
 {
     class Program
     {
+        public static LoggingLevel logging = LoggingLevel.LIGHT;
+        public static ConfigFile config;
+        public static List<OperatorInformation> operatorsArray;
+        public static int portnumber = 12000;
+
         static void Main(string[] args)
         {
-
-            //mathias start
-
-            int portnumber = 100;
-            Process.Start("..\\..\\..\\Operator\\bin\\Debug\\Operator.exe", Convert.ToString(portnumber));
-            //mathias end
-
-            
-            //TCP channel
             TcpChannel channel = new TcpChannel();
             ChannelServices.RegisterChannel(channel, true);
 
-
-
-            Operator obj = (Operator)Activator.GetObject(
-                typeof(Operator),
-                "tcp://localhost:100/op");
-            if (obj == null)
+            loadConfigFile();
+            
+            foreach (var x in operatorsArray)
             {
-                System.Console.WriteLine("Could not locate server");
-            }
-            else
-            {
-               // Console.WriteLine(obj.Hello());
+                Console.WriteLine("running operator id: "+portnumber);
+                x.setPort(portnumber);
+                ThreadOperator op1 = new ThreadOperator(portnumber);
+                Thread t1 = new Thread(new ThreadStart(op1.start));
+                t1.Start();
+                portnumber++;
             }
 
-
+            Console.WriteLine(Console.ReadLine());
             Console.ReadLine();
         }
 
-        public void LoadConfigFile()
+        public static void loadConfigFile()
         {
-
+            config = new ConfigFile();
+            logging = config.returnLogging() ;
+            operatorsArray = config.returnOperatorsArray();
         }
+        
     }
+    
 }
