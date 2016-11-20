@@ -92,13 +92,7 @@ namespace DADstorm
             return this.executor.getInformation();
         }
 
-
-
-
-
-
-
-
+        
         // IGOR´s TEST
         public string getTestForIco()
         {

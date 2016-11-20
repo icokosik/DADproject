@@ -20,10 +20,18 @@ namespace DADstorm
 
         static void Main(string[] args)
         {
+            System.IO.File.Delete("LoggingFile.txt");
             TcpChannel channel = new TcpChannel();
             ChannelServices.RegisterChannel(channel, false);
 
             loadConfigFile();
+            
+            if (logging == LoggingLevel.FULL)
+            {
+                ThreadLog log = new ThreadLog();
+                Thread t2 = new Thread(new ThreadStart(log.start));
+                t2.Start();
+            }
             
             foreach (var x in operatorsArray)
             {
@@ -32,8 +40,9 @@ namespace DADstorm
                 ThreadOperator op1 = new ThreadOperator(portnumber);
                 Thread t1 = new Thread(new ThreadStart(op1.start));
                 t1.Start();
-                portnumber++;
+                portnumber++;               
             }
+            
             
             Console.WriteLine(Console.ReadLine());
             Console.ReadLine();
@@ -44,6 +53,11 @@ namespace DADstorm
             config = new ConfigFile();
             logging = config.returnLogging() ;
             operatorsArray = config.returnOperatorsArray();
+        }
+
+        public void saveToLogFile(string logLine)
+        {
+            System.IO.File.AppendAllText("LoggingFile.txt", logLine + Environment.NewLine);            
         }
         
     }
