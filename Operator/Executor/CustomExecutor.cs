@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DADstorm.OperatorExecutor
+namespace DADstorm
 {
     class CustomExecutor : Executor
     { 
@@ -21,7 +23,12 @@ namespace DADstorm.OperatorExecutor
 
         public override Tuple execute()
         {
-            throw new NotImplementedException();
+            Assembly assembly = Assembly.LoadFile(information.dllLocation);
+            Type t = assembly.GetType(information.className);
+            dynamic method = t.GetMethod(information.method);
+            dynamic obj = Activator.CreateInstance(t);
+            string output = method.Invoke(obj, new object[] { });
+            return new Tuple(new List<string>() { output });
         }
 
     }

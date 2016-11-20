@@ -15,7 +15,7 @@ namespace DADstorm
     {
         public static LoggingLevel logging = LoggingLevel.LIGHT;
         public static ConfigFile config;
-        public static List<OperatorInformation> operatorsArray;
+        public static List<OperatorCreationInformation> operatorsArray;
         public static int portnumber = 12000;
 
         static void Main(string[] args)

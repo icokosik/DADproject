@@ -6,17 +6,19 @@ using System.Threading.Tasks;
 
 namespace DADstorm
 {
-    public class OperatorInformation
+    class OperatorCreationInformation
     {
         /**
          * Basic Operator information
          */
         public int port = 12000;
+        public OperatorSpec type;
         public List<string> inputsource;
         public RoutingOption routing;
         public int id;
         public string name;
-        string address;
+        public int repl_factor;
+        List<string> address_array;
 
         /**
          * FilterOperator
@@ -31,13 +33,16 @@ namespace DADstorm
         public string className;
         public string method;
 
-        public OperatorInformation() { }
-        public OperatorInformation(string name2, List<string> inputsource2, RoutingOption routing2, string address2, int fieldnumber2,
-            string value2, FilterCondition condition2, string dllLocation2,string className2, string method2) {
+        public OperatorCreationInformation() { }
+        public OperatorCreationInformation(string name2, List<string> inputsource2, int repl_factor2, RoutingOption routing2, List<string> address_array2,
+            OperatorSpec type2, int fieldnumber2, string value2, FilterCondition condition2, string dllLocation2, string className2, string method2)
+        {
             name = name2;
             inputsource = inputsource2;
+            repl_factor = repl_factor2;
             routing = routing2;
-            address = address2;
+            address_array = address_array2;
+            type = type2;
 
             fieldnumber = fieldnumber2;
             value = value2;
@@ -48,12 +53,11 @@ namespace DADstorm
             method = method2;
         }
 
-        public void setPort(int input) {
+        public void setPort(int input)
+        {
             port = input;
         }
         public int getPort()
         { return port; }
-
     }
-
 }
