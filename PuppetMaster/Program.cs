@@ -15,13 +15,16 @@ namespace DADstorm
     {
         public static LoggingLevel logging = LoggingLevel.LIGHT;
         public static ConfigFile config;
-        public static List<OperatorInformation> operatorsArray;
+       public static List<OperatorInformation> operatorsArray;
         public static List<SourceOPs> sourceoperators;
+     //   public static List<OperatorCreationInformation> operatorsArray;
         public static int portnumber = 12000;
 
         static void Main(string[] args)
         {
             sourceoperators = new List<SourceOPs>();
+
+            System.IO.File.Delete("LoggingFile.txt");
 
             TcpChannel channel = new TcpChannel();
             ChannelServices.RegisterChannel(channel, false);
@@ -41,13 +44,19 @@ namespace DADstorm
                     {
                         Console.WriteLine("Starting new Operator in Thread with port: " + y.portnumber);
                         x.setPort(y.portnumber);
-                        ThreadOperator op1 = new ThreadOperator(y.portnumber, x,sourceoperators);
+                        ThreadOperator op1 = new ThreadOperator(y.portnumber,x,sourceoperators);
                         Thread t1 = new Thread(new ThreadStart(op1.start));
                         t1.Start();
                     }
             }
            
-
+            if (logging == LoggingLevel.FULL)
+            {
+                ThreadLog log = new ThreadLog();
+                Thread t2 = new Thread(new ThreadStart(log.start));
+                t2.Start();
+            }
+          
             Console.WriteLine(Console.ReadLine());
             Console.ReadLine();
         }
@@ -55,8 +64,14 @@ namespace DADstorm
         public static void loadConfigFile()
         {
             config = new ConfigFile();
-            logging = config.returnLogging() ;
-            operatorsArray = config.returnOperatorsArray();
+            logging = config.returnLogging();
+            operatorsArray = config.operatorsArray;
+        }
+
+
+        public void saveToLogFile(string logLine)
+        {
+            System.IO.File.AppendAllText("LoggingFile.txt", logLine + Environment.NewLine);            
         }
         
     }

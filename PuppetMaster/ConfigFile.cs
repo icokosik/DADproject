@@ -9,7 +9,7 @@ namespace DADstorm
     class ConfigFile
     {
         public LoggingLevel logging = LoggingLevel.LIGHT;
-        List<OperatorInformation> operatorsArray = new List<OperatorInformation>();
+        public List<OperatorInformation> operatorsArray = new List<OperatorInformation>();
         List<string> allCMDinfile;
 
         public ConfigFile()
@@ -309,7 +309,7 @@ namespace DADstorm
             }
 
             //add operator to list
-            operatorsArray.Add(new OperatorInformation(operator_id,operator_source,repl_factor, routing, address_array,type,field_number,value,condition,dllLocation,className,method));
+            operatorsArray.Add(new OperatorInformation(operator_id, operator_source, routing, address_array, field_number, value, condition, dllLocation, className, method));
 
         }
     }

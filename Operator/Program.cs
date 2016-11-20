@@ -7,6 +7,7 @@ using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
 using System.Threading;
+using System.IO;
 
 namespace DADstorm
 {
@@ -19,9 +20,7 @@ namespace DADstorm
         static void Main(string[] args)
         {
             int puppetMasterPort = Int32.Parse(args[0]);
-            getOperatorInformation(puppetMasterPort);
-            CheckOperatorInformation();
-            
+            getOperatorInformation(puppetMasterPort);            
             
             Console.ReadLine();
         }
@@ -49,33 +48,15 @@ namespace DADstorm
 
         }
 
-        public static void CheckOperatorInformation()
-        {
-            switch(information.type)
-            {
-                case OperatorSpec.COUNT:
-                    break;
-                case OperatorSpec.DUP:
-                    break;
-                case OperatorSpec.FILTER:
-                    break;
-                case OperatorSpec.UNIQ:
-                    break;
-                case OperatorSpec.CUSTOM:
-                    break;
-            }
-        }
-
         public static void test()
         {
             //TEST
             OperatorInformation info = new OperatorInformation();
-            info.fieldnumber = 0;
-            info.value = "hai";
-            info.condition = FilterCondition.GREATER;
-            Operator op = new Operator(new FilterExecutor(info));
-            List<string> list = new List<string>();
-            list.Add("ha");
+            info.dllLocation = Path.GetFullPath("..\\..\\..\\CustomOperators\\bin\\Debug\\CustomOperators.dll");
+            info.className = "CustomOperators.HelloWorld";
+            info.method = "hello";
+            Operator op = new Operator(new CustomExecutor(info));
+            List<string> list = new List<string>() { "ha" };
             Tuple input = new Tuple(list);
             op.setInput(input);
             Console.WriteLine(op.execute().ToString());
