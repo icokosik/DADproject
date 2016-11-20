@@ -16,25 +16,38 @@ namespace DADstorm
         public static LoggingLevel logging = LoggingLevel.LIGHT;
         public static ConfigFile config;
         public static List<OperatorInformation> operatorsArray;
+        public static List<SourceOPs> sourceoperators;
         public static int portnumber = 12000;
 
         static void Main(string[] args)
         {
+            sourceoperators = new List<SourceOPs>();
+
             TcpChannel channel = new TcpChannel();
             ChannelServices.RegisterChannel(channel, false);
-
             loadConfigFile();
-            
+
+            //add to PM SourceOPs list
             foreach (var x in operatorsArray)
             {
-                Console.WriteLine("running operator id: "+portnumber);
-                x.setPort(portnumber);
-                ThreadOperator op1 = new ThreadOperator(portnumber);
-                Thread t1 = new Thread(new ThreadStart(op1.start));
-                t1.Start();
+                sourceoperators.Add(new SourceOPs(x.name, portnumber));
                 portnumber++;
             }
-            
+
+            foreach (var x in operatorsArray)
+            {
+                foreach(var y in sourceoperators)
+                    if(x.name==y.name)
+                    {
+                        Console.WriteLine("Starting new Operator in Thread with port: " + y.portnumber);
+                        x.setPort(y.portnumber);
+                        ThreadOperator op1 = new ThreadOperator(y.portnumber, x,sourceoperators);
+                        Thread t1 = new Thread(new ThreadStart(op1.start));
+                        t1.Start();
+                    }
+            }
+           
+
             Console.WriteLine(Console.ReadLine());
             Console.ReadLine();
         }

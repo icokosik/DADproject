@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime.Remoting.Channels;
+using System.Runtime.Remoting.Channels.Tcp;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DADstorm
@@ -10,15 +13,21 @@ namespace DADstorm
     class ThreadOperator
     {
         int portnumber;
-
-        public ThreadOperator(int portnumber)
+        public OperatorInformation oi;
+        public List<SourceOPs> sourceoperators;
+        public ThreadOperator(int portnumber, OperatorInformation oi, List<SourceOPs> sourceoperators)
         {
             this.portnumber = portnumber;
+            this.oi = oi;
+            this.sourceoperators = sourceoperators;
         }
 
         public void start()
         {
+
             Process.Start("..\\..\\..\\Operator\\bin\\Debug\\Operator.exe", Convert.ToString(portnumber));
+
+            //CLIENT
             string stringbuilder = "tcp://localhost:" + Convert.ToInt32(portnumber) + "/op";
             
             Operator obj = (Operator)Activator.GetObject(
@@ -30,9 +39,17 @@ namespace DADstorm
             }
             else
             {
-                Console.WriteLine("Connected...");
-                obj.setTestForIco("test1");
-                Console.WriteLine(obj.getTestForIco());
+                Console.WriteLine("OP is connected to PM, starting do download sourceoperators and operatorinformation");
+                //obj.setTestForIco("test1");
+                //Console.WriteLine(obj.getTestForIco());
+
+                obj.setOI(oi);
+                obj.setSourceOPs(sourceoperators);
+                Thread.Sleep(1000);
+                //Console.WriteLine(obj.test());
+              //  obj.input.showAll();
+
+
             }
 
         }

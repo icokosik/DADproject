@@ -60,6 +60,7 @@
     <Compile Include="Operator.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SourceOPs.cs" />
     <Compile Include="Tuple.cs" />
   </ItemGroup>
   <ItemGroup>

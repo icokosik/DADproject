@@ -6,21 +6,22 @@ using System.Threading.Tasks;
 
 namespace DADstorm
 {
+    [Serializable]
     public class OperatorInformation
     {
         /**
          * Basic Operator information
          */
-        public static int port = 12000;
+        public int port;
         public OperatorSpec type;
         public List<string> inputsource;
         public RoutingOption routing;
-        public static int id;
-        public static string name;
-        public static int repl_factor;
+        public int id;
+        public string name;
+        public int repl_factor;
         List<string> address_array;
 
-        public Tuple input;
+    //    public Tuple input;
         /**
          * FilterOperator
          */
@@ -58,6 +59,10 @@ namespace DADstorm
         public int getPort()
         { return port; }
 
+        public string test()
+        { return "obsah OI"; }
+        public string getname()
+        { return name; }
     }
 
 }

@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
+using System.Threading;
 
 namespace DADstorm
 {
@@ -13,6 +14,7 @@ namespace DADstorm
     public class Program
     {
         public static OperatorInformation information;
+        
 
         static void Main(string[] args)
         {
@@ -27,16 +29,24 @@ namespace DADstorm
         public static void getOperatorInformation(int port)
         {
             test();
-            Console.WriteLine("Establishing connection with PuppetMaster on port " + port);
-            TcpChannel channel = new TcpChannel(port);
-            
-             RemotingConfiguration.RegisterWellKnownServiceType(
-             typeof(Operator),
-                            "op",
-                            WellKnownObjectMode.Singleton);
+            Console.WriteLine("Establishing connection with PuppetMaster at port " + port);
 
-            // Receive OperatorInformation
-            information = new OperatorInformation();
+            //SERVER
+            TcpChannel channel = new TcpChannel(port);
+            ChannelServices.RegisterChannel(channel,false);
+
+            Operator operator1 = new Operator();
+            RemotingServices.Marshal(operator1, "op",
+                typeof(Operator));
+
+            //do NOT delete "sleep" !!!
+            Thread.Sleep(2000);
+            information = operator1.getOI();
+
+            Console.WriteLine("Operator review... name: {0}, id: {1}, repl_factor: {2}, port:{3}" ,information.name , information.id , information.repl_factor, information.port);
+
+            operator1.connectToInput();
+
         }
 
         public static void CheckOperatorInformation()
