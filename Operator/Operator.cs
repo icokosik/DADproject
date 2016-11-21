@@ -21,6 +21,7 @@ namespace DADstorm
 
         public bool isConnected = false;
         public string testforico = "Test 1";
+        public bool test2 = true;
         private IExecutor executor;
 
         public Operator(IExecutor executor)
@@ -57,13 +58,14 @@ namespace DADstorm
             int porttoconnect = 0;
 
             // WE HAVE TO SOLVE PROBLEM WITH WAITING
+            /*
             if (information.port == 12001)
                 Thread.Sleep(2000);
             if (information.port == 12002)
                 Thread.Sleep(6000);
             if (information.port == 12003)
                 Thread.Sleep(10000);
-
+*/
 
             //inputSource.Add("D:\\followers.dat");
             foreach (string tmp in information.inputsource)

@@ -12,7 +12,6 @@ namespace DADstorm
         /**
          * Basic Operator information
          */
-        public OperatorSpec type;
         public int port;
         public List<string> inputsource;
         public RoutingOption routing;
@@ -33,6 +32,7 @@ namespace DADstorm
         /**
          * CustomOperator
          */
+        public OperatorSpec type;
         public string dllLocation;
         public string className;
         public string method;
@@ -56,7 +56,7 @@ namespace DADstorm
 
 
         public OperatorInformation(string name2, List<string> inputsource2, RoutingOption routing2, List<string>address_array2, int fieldnumber2,
-            string value2, FilterCondition condition2, string dllLocation2, string className2, string method2)
+            string value2, FilterCondition condition2, OperatorSpec type2, string dllLocation2, string className2, string method2)
         {
             name = name2;
             inputsource = inputsource2;
@@ -67,6 +67,7 @@ namespace DADstorm
             value = value2;
             condition = condition2;
 
+            type = type2;
             dllLocation = dllLocation2;
             className = className2;
             method = method2;

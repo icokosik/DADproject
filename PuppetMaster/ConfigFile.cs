@@ -255,7 +255,7 @@ namespace DADstorm
                 if ((String.Equals(Convert.ToString(x[i]), "operator")) && (String.Equals(Convert.ToString(x[i + 1]), "spec")))
                 {
                     string inputOperator = Convert.ToString(x[i + 2]); //name of input operator
-                    
+                    Console.WriteLine("----->operator type: " + inputOperator);
                     string[] words3;
 
                     switch (inputOperator)
@@ -309,7 +309,7 @@ namespace DADstorm
             }
 
             //add operator to list
-            operatorsArray.Add(new OperatorInformation(operator_id, operator_source, routing, address_array, field_number, value, condition, dllLocation, className, method));
+            operatorsArray.Add(new OperatorInformation(operator_id, operator_source, routing, address_array, field_number, value, condition,type, dllLocation, className, method));
 
         }
     }

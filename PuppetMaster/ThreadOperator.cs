@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
@@ -32,23 +33,30 @@ namespace DADstorm
 
             //CLIENT
             string stringbuilder = "tcp://localhost:" + Convert.ToInt32(portnumber) + "/op";
+
+            Operator obj = null;
+
+                obj = (Operator)Activator.GetObject(
+                              typeof(Operator),
+                              stringbuilder);
+            if (obj.test2 == true)
+            {
+                
+            }
             
-            Operator obj = (Operator)Activator.GetObject(
-                          typeof(Operator),
-                          stringbuilder);
             if (obj == null)
             {
                 Console.WriteLine("Could not locate server");
             }
             else
             {
-                Console.WriteLine("OP is connected to PM, starting do download sourceoperators and operatorinformation");
+                Console.WriteLine("OP is connected to PM, starting do UPLOAD sourceoperators and operatorinformation to Operator");
                 //obj.setTestForIco("test1");
                 //Console.WriteLine(obj.getTestForIco());
 
                 obj.setOI(oi);
                 obj.setSourceOPs(sourceoperators);
-                Thread.Sleep(1000);
+              //  Thread.Sleep(1000);
                 //Console.WriteLine(obj.test());
               //  obj.input.showAll();
 
