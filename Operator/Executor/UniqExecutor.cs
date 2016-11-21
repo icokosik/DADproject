@@ -26,7 +26,7 @@ namespace DADstorm
         public override Tuple execute()
         {
             if (!checkInput()) throw new InvalidInputException();
-            if (passedItems.Contains(input.getItems()[information.fieldnumber])) return null;
+            if (passedItems.Contains(input.getItems()[information.fieldnumber])) return Tuple.EMPTY;
             passedItems.Add(input.getItems()[information.fieldnumber]);
             return input;
         }

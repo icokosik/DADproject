@@ -9,7 +9,7 @@ namespace DADstorm
     [Serializable]
     public class ListOfTuples
     {
-        public List<Tuple> tuplesArray=new List<Tuple>();
+        public List<Tuple> tuplesArray = new List<Tuple>();
 
         public void addToList(Tuple x)
         {
@@ -19,14 +19,13 @@ namespace DADstorm
         { return "Hello from ListOfTuples"; }
         public void showAll()
         {
-
-            foreach (var x in tuplesArray) {
+            foreach (Tuple x in tuplesArray) {
                 Console.WriteLine(x.ToString());
             }
         }
     }
 
-    public class Tuple:MarshalByRefObject
+    public class Tuple : MarshalByRefObject
     {
         public static Tuple EMPTY = new Tuple(new List<string>());
 

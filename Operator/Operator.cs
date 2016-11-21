@@ -35,9 +35,13 @@ namespace DADstorm
         {
         }
 
-        public Tuple execute()
+        public void execute()
         {
-            return this.executor.execute();
+            foreach(Tuple t in input.tuplesArray)
+            {
+                setInput(t);
+                output.addToList(this.executor.execute());
+            }
         }
 
         public void setInput(Tuple input)
@@ -55,6 +59,28 @@ namespace DADstorm
             }
             return porttoinput;
         }
+
+        public void setExecutor()
+        {
+            switch(information.type)
+            {
+                case OperatorSpec.COUNT:
+                    executor = new CountExecutor(information);
+                    break;
+                case OperatorSpec.CUSTOM:
+                    executor = new CustomExecutor(information);
+                    break;
+                case OperatorSpec.DUP:
+                    executor = new DupExecutor(information);
+                    break;
+                case OperatorSpec.FILTER:
+                    executor = new FilterExecutor(information);
+                    break;
+                case OperatorSpec.UNIQ:
+                    executor = new UniqExecutor(information);
+                    break;
+            }
+        }
         // TODO: Diana
         public void connectToInput()
         {
@@ -68,7 +94,6 @@ namespace DADstorm
                 Thread.Sleep(6000);
             if (information.port == 12003)
                 Thread.Sleep(10000);
-                
 
             //inputSource.Add("D:\\followers.dat");
             foreach (string tmp in information.inputsource)
@@ -136,7 +161,7 @@ namespace DADstorm
                                 string[] fields=line.Split(',');
                                 foreach(string item in fields)
                                 {
-                                    listItems.Add(item);
+                                    listItems.Add(item.Trim(' ').Trim('"'));
                                 }
                                 inputTuple = new Tuple(listItems);
                                 input.addToList(inputTuple);
@@ -153,14 +178,22 @@ namespace DADstorm
             }
 
             createOutput();
-            input.showAll();
-
         }
 
         public void createOutput()
         {
-            //HAS TO BE CHANGED !!! 
-            output = input;
+            //output = input;
+            Console.WriteLine("INPUTS:  --------");
+            input.showAll();
+            foreach(Tuple t in input.tuplesArray)
+            {
+                executor.setInput(t);
+                Tuple result = executor.execute();
+                if(result != Tuple.EMPTY)
+                    output.addToList(executor.execute());
+            }
+            Console.WriteLine("OUTPUTS:   ----------");
+            output.showAll();
         }
 
         public bool connectionToInput()

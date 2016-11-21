@@ -263,22 +263,19 @@ namespace DADstorm
                         case "UNIQ":
                             inputText = Convert.ToString(x[i + 3]);
                             words3 = inputText.Split(',');
-                            field_number = Convert.ToInt32(words3[0]);
+                            field_number = Convert.ToInt32(words3[0]) - 1;
                             type = OperatorSpec.UNIQ;
                             break;
                         case "COUNT":
-                            //?
                             type = OperatorSpec.COUNT;
                             break;
                         case "DUP":
                             type = OperatorSpec.DUP;
-
-                            //?
                             break;
                         case "FILTER":
                             inputText = Convert.ToString(x[i + 3]);
                             words3 = inputText.Split(',');
-                            field_number = Convert.ToInt32(words3[0]);
+                            field_number = Convert.ToInt32(words3[0]) - 1;
                             switch (words3[1])
                             {
                                 case "<":
@@ -292,7 +289,7 @@ namespace DADstorm
                                     break;
                                 default: break;
                             }
-                            value = words3[2];
+                            value = words3[2].Trim('"');
                             type = OperatorSpec.FILTER;
                             break;
                         case "CUSTOM":

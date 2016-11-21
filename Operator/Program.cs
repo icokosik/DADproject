@@ -28,7 +28,7 @@ namespace DADstorm
 
         public static void getOperatorInformation(int port)
         {
-            test();
+            //test();
             Console.WriteLine("Establishing connection with PuppetMaster at port " + port);
 
             //SERVER
@@ -58,12 +58,9 @@ namespace DADstorm
 
 
             information = operator1.getOI();
-
-            Console.WriteLine("Operator review... name: {0}, id: {1}, repl_factor: {2}, port:{3}" ,information.name , information.id , information.repl_factor, information.port);
-
-
-           
-
+            
+            Console.WriteLine("Operator review... name: {0}, id: {1}, repl_factor: {2}, port:{3}, spec: {4}" ,information.name , information.id , information.repl_factor, information.port, information.type);
+            operator1.setExecutor();
             operator1.connectToInput();
 
         }
@@ -79,7 +76,6 @@ namespace DADstorm
             List<string> list = new List<string>() { "ha" };
             Tuple input = new Tuple(list);
             op.setInput(input);
-            Console.WriteLine(op.execute().ToString());
             //ENDTEST
         }
 

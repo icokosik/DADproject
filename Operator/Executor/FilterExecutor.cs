@@ -25,7 +25,7 @@ namespace DADstorm
             switch (information.condition)
             {
                 case FilterCondition.EQUALS:
-                    if (input.get(information.fieldnumber).CompareTo(information.value) == 0)
+                    if (input.get(information.fieldnumber).Equals(information.value))
                     {
                         return input;
                     }
