@@ -19,7 +19,7 @@ namespace DADstorm
         public ListOfTuples input = new ListOfTuples();
         public ListOfTuples output = new ListOfTuples();
 
-        public bool isconected = false;
+        public bool isConnected = false;
         public string testforico = "Test 1";
         private IExecutor executor;
 
@@ -93,7 +93,7 @@ namespace DADstorm
                         
                     }
 
-                    isconected = true;
+                    isConnected = true;
                     
                 }
                 else if (Regex.IsMatch(tmp, @"^\d+$")) //operator as number 
@@ -117,7 +117,7 @@ namespace DADstorm
                     Tuple inputTuple;
                     List<string> listItems;
 
-                    System.IO.StreamReader file = new System.IO.StreamReader(path);
+                    System.IO.StreamReader file = new System.IO.StreamReader("..\\..\\doc\\" + path);
                     while ((line = file.ReadLine()) != null)
                     {
                           
@@ -138,7 +138,7 @@ namespace DADstorm
                         }
                         
                     }
-                    isconected = true;
+                    isConnected = true;
 
                     file.Close();
                   //  Console.WriteLine("SHOW TUPLE :" + input.ToString());
@@ -158,7 +158,7 @@ namespace DADstorm
 
         public bool connectionToInput()
         {
-            return isconected;
+            return isConnected;
         }
 
         public Tuple getInput()

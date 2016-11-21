@@ -24,8 +24,11 @@ namespace DADstorm
 
         public void start()
         {
-
-            Process.Start("..\\..\\..\\Operator\\bin\\Debug\\Operator.exe", Convert.ToString(portnumber));
+            Process p = new Process();
+            p.StartInfo.WorkingDirectory = "..\\..\\..\\Operator\\bin\\Debug";
+            p.StartInfo.FileName = "Operator.exe";
+            p.StartInfo.Arguments = Convert.ToString(portnumber);
+            p.Start();
 
             //CLIENT
             string stringbuilder = "tcp://localhost:" + Convert.ToInt32(portnumber) + "/op";
