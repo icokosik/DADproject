@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
 using System.Text;
@@ -21,6 +22,7 @@ namespace DADstorm
             this.portnumber = portnumber;
             this.oi = oi;
             this.sourceoperators = sourceoperators;
+            
         }
 
         public void start()
@@ -31,19 +33,18 @@ namespace DADstorm
             p.StartInfo.Arguments = Convert.ToString(portnumber);
             p.Start();
 
+
+
             //CLIENT
             string stringbuilder = "tcp://localhost:" + Convert.ToInt32(portnumber) + "/op";
 
-            Operator obj = null;
+            Operator obj;
 
                 obj = (Operator)Activator.GetObject(
                               typeof(Operator),
                               stringbuilder);
-            if (obj.test2 == true)
-            {
-                
-            }
             
+
             if (obj == null)
             {
                 Console.WriteLine("Could not locate server");
@@ -55,10 +56,12 @@ namespace DADstorm
                 //Console.WriteLine(obj.getTestForIco());
 
                 obj.setOI(oi);
+                obj.isConnected = true;
                 obj.setSourceOPs(sourceoperators);
-              //  Thread.Sleep(1000);
+
+                //  Thread.Sleep(1000);
                 //Console.WriteLine(obj.test());
-              //  obj.input.showAll();
+                //  obj.input.showAll();
 
 
             }

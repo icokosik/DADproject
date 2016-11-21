@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
@@ -11,6 +12,7 @@ using System.Threading.Tasks;
 
 namespace DADstorm
 {
+    
     public class Operator : MarshalByRefObject
     {
         public OperatorInformation information = new OperatorInformation();
@@ -19,16 +21,17 @@ namespace DADstorm
         public ListOfTuples input = new ListOfTuples();
         public ListOfTuples output = new ListOfTuples();
 
+        public string stringbuilder;
         public bool isConnected = false;
         public string testforico = "Test 1";
-        public bool test2 = true;
+        public bool test2 = false;
         private IExecutor executor;
 
-        public Operator(IExecutor executor)
+        public Operator(IExecutor executor):base()
         {
             this.executor = executor;
         }
-        public Operator()
+        public Operator():base()
         {
         }
 
@@ -58,32 +61,34 @@ namespace DADstorm
             int porttoconnect = 0;
 
             // WE HAVE TO SOLVE PROBLEM WITH WAITING
-            /*
+            
             if (information.port == 12001)
                 Thread.Sleep(2000);
             if (information.port == 12002)
                 Thread.Sleep(6000);
             if (information.port == 12003)
                 Thread.Sleep(10000);
-*/
+                
 
             //inputSource.Add("D:\\followers.dat");
             foreach (string tmp in information.inputsource)
             {
-                
+               
 
                 if (Regex.IsMatch(tmp, "^OP\\d+$")) //operator in format OP1, OP2, ..., OPn
                 {
                     porttoconnect = getPortToInput(tmp);
                     Console.WriteLine("Operator connecting to OP: " + tmp + " , by port: " + porttoconnect);
-                    //CLIENT
-                    string stringbuilder = "tcp://localhost:" + Convert.ToInt32(porttoconnect) + "/op";
 
+                    //CLIENT
+                    stringbuilder = "tcp://localhost:" + Convert.ToInt32(porttoconnect) + "/op";
                     Operator operatorImage = (Operator)Activator.GetObject(
                                    typeof(Operator),
                                    stringbuilder);
+
                     input = operatorImage.output;
-              
+
+                    //
                     if (operatorImage == null)
                     {
                         Console.WriteLine("Could not locate server ---> Can´t connect to :"+tmp);
@@ -178,13 +183,14 @@ namespace DADstorm
 
 
 
-
+       
 
         //Igor _ code
         public void setOI(OperatorInformation x)
         {
             information = x;
         }
+      
         public OperatorInformation getOI()
         { return information; }
 
@@ -215,5 +221,25 @@ namespace DADstorm
         }
 
 
+
+
+        public bool isConnected2()
+        {
+
+            Uri url = new Uri(stringbuilder);
+            string pingurl = string.Format("{0}", url.Host);
+            string host = pingurl;
+
+            bool result = false;
+            Ping p = new Ping();
+            try
+            {
+                PingReply reply = p.Send(host, 3000);
+                if (reply.Status == IPStatus.Success)
+                    return true;
+            }
+            catch { }
+            return result;
+        }
     }
 }

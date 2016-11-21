@@ -8,6 +8,7 @@ using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
 using System.Threading;
 using System.IO;
+using System.Net.NetworkInformation;
 
 namespace DADstorm
 {
@@ -15,11 +16,11 @@ namespace DADstorm
     public class Program
     {
         public static OperatorInformation information;
-        
+        public static  int puppetMasterPort;
 
         static void Main(string[] args)
         {
-            int puppetMasterPort = Int32.Parse(args[0]);
+            puppetMasterPort = Int32.Parse(args[0]);
             getOperatorInformation(puppetMasterPort);            
             
             Console.ReadLine();
@@ -38,11 +39,30 @@ namespace DADstorm
             RemotingServices.Marshal(operator1, "op",
                 typeof(Operator));
 
-            //do NOT delete "sleep" !!!
-            Thread.Sleep(2000);
+          
+            //trying to connect
+            bool isOIuploaded = false;
+            do
+            {
+                if (operator1.isConnected)
+                {
+                    Console.WriteLine("___ FINALLY Connected to PM");
+                    isOIuploaded = true;
+                }
+                else
+                {
+                    Console.WriteLine("___ NOT Connected to PM");
+                    Thread.Sleep(300);
+                }
+            } while (isOIuploaded == false);
+
+
             information = operator1.getOI();
 
             Console.WriteLine("Operator review... name: {0}, id: {1}, repl_factor: {2}, port:{3}" ,information.name , information.id , information.repl_factor, information.port);
+
+
+           
 
             operator1.connectToInput();
 
@@ -61,6 +81,26 @@ namespace DADstorm
             op.setInput(input);
             Console.WriteLine(op.execute().ToString());
             //ENDTEST
+        }
+
+
+        public static bool isConnected(string stringbuilder)
+        {
+
+            Uri url = new Uri(stringbuilder);
+            string pingurl = string.Format("{0}", url.Host);
+            string host = pingurl;
+
+            bool result = false;
+            Ping p = new Ping();
+            try
+            {
+                PingReply reply = p.Send(host, 3000);
+                if (reply.Status == IPStatus.Success)
+                    return true;
+            }
+            catch { }
+            return result;
         }
     }
 
