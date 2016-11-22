@@ -15,8 +15,7 @@ namespace DADstorm
         {
             tuplesArray.Add(x);
         }
-        public string returnHello()
-        { return "Hello from ListOfTuples"; }
+
         public void showAll()
         {
             foreach (Tuple x in tuplesArray) {
@@ -35,10 +34,12 @@ namespace DADstorm
         {
             this.items = items;   
         }
+
         public void setTuple(List<string> items)
         {
             this.items = items;
         }
+
         public Tuple() { }
     
         public List<string> getItems()
@@ -77,8 +78,5 @@ namespace DADstorm
             }
             return true;
         }
-
-        public string returnHello()
-        { return "Hello from Tuple"; }
     }
 }

@@ -15,16 +15,19 @@ namespace DADstorm
     class ThreadOperator
     {
         int portnumber;
-        public OperatorInformation oi;
+        public OperatorInformation information;
         public List<SourceOPs> sourceoperators;
-        public ThreadOperator(int portnumber, OperatorInformation oi, List<SourceOPs> sourceoperators)
+
+        public ThreadOperator(OperatorInformation information, List<SourceOPs> sourceoperators)
         {
-            this.portnumber = portnumber;
-            this.oi = oi;
+            this.information = information;
+            this.portnumber = information.port;
             this.sourceoperators = sourceoperators;
-            
         }
 
+        /**
+         * Create a new Process of type Operator, connect to it via Marshalling and send it all information
+         */
         public void start()
         {
             Process p = new Process();
@@ -32,40 +35,28 @@ namespace DADstorm
             p.StartInfo.FileName = "Operator.exe";
             p.StartInfo.Arguments = Convert.ToString(portnumber);
             p.Start();
-
-
-
-            //CLIENT
-            string stringbuilder = "tcp://localhost:" + Convert.ToInt32(portnumber) + "/op";
-
-            Operator obj;
-
-                obj = (Operator)Activator.GetObject(
-                              typeof(Operator),
-                              stringbuilder);
             
+            // Connect to Operator
+            string address = "tcp://localhost:" + Convert.ToInt32(portnumber) + "/op";
+            Operator op = (Operator)Activator.GetObject(
+                              typeof(Operator),
+                              address);
+            
+            /**
+             * Should maybe block until Operator is fully initialized and has his Marshalling setup
+             */
 
-            if (obj == null)
+            if (op == null)
             {
                 Console.WriteLine("Could not locate server");
             }
             else
             {
-                Console.WriteLine("OP is connected to PM, starting do UPLOAD sourceoperators and operatorinformation to Operator");
-                //obj.setTestForIco("test1");
-                //Console.WriteLine(obj.getTestForIco());
-
-                obj.setOI(oi);
-                obj.isConnected = true;
-                obj.setSourceOPs(sourceoperators);
-
-                //  Thread.Sleep(1000);
-                //Console.WriteLine(obj.test());
-                //  obj.input.showAll();
-
-
+                Console.WriteLine("OP{0} is connected to PM, starting upload sourceoperators and operatorinformation to Operator", information.id);
+                op.setInformation(information);
+                op.setSourceOPs(sourceoperators);
+                Console.WriteLine("Finished uploading to OP{0}", information.id);
             }
-
         }
     }
 }

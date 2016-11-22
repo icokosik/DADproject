@@ -9,8 +9,10 @@ namespace DADstorm
     class ConfigFile
     {
         public LoggingLevel logging = LoggingLevel.LIGHT;
-        public List<OperatorInformation> operatorsArray = new List<OperatorInformation>();
+        private List<OperatorInformation> operatorsArray = new List<OperatorInformation>();
         List<string> allCMDinfile;
+
+        private static int operatorCount = 0;
 
         public ConfigFile()
         {
@@ -25,9 +27,10 @@ namespace DADstorm
             commandRecognizer();
         }
 
-        public List<OperatorInformation> returnOperatorsArray() {
+        public List<OperatorInformation> getOperatorsArray() {
             return operatorsArray;
         }
+
         public LoggingLevel returnLogging()
         {
             return logging;
@@ -158,18 +161,13 @@ namespace DADstorm
                     unfreeze(x);
             }
         }
-
-
-
-
-
-
+        
 
         //Operator SET UP - from Config File Command
         public void operatorsSetUp(List<string> x)
         {
-            string operator_id, routingfunction, value, dllLocation, className, method, inputText;
-            operator_id = routingfunction = value = dllLocation = className = method = inputText = "";
+            string operator_name, routingfunction, value, dllLocation, className, method, inputText;
+            operator_name = routingfunction = value = dllLocation = className = method = inputText = "";
             int field_number =0; 
             int repl_factor=0;
             int routingnumber = 0;
@@ -183,7 +181,7 @@ namespace DADstorm
             if (x.Count > 1)
                 if (String.Equals(Convert.ToString(x[1]), "input"))
                 {
-                    operator_id = Convert.ToString(x[0]);
+                    operator_name = Convert.ToString(x[0]);
                     string input;
                     int counter = 3;
                     do
@@ -197,7 +195,7 @@ namespace DADstorm
 
                     
                     //print
-                    Console.WriteLine("\n----->operator ID: " + operator_id);
+                    Console.WriteLine("\n----->operator ID: " + operator_name);
                     foreach (var u in operator_source)
                         Console.WriteLine("----->operator souce: " + u);
                 }
@@ -305,9 +303,12 @@ namespace DADstorm
                 }
             }
 
-            //add operator to list
-            operatorsArray.Add(new OperatorInformation(operator_id, operator_source, routing, address_array, field_number, value, condition,type, dllLocation, className, method));
-
+            // Add operator to list, one for each replica_fact.
+            for (int i = 0; i < repl_factor; i++)
+            {
+                operatorsArray.Add(new OperatorInformation(operatorCount, operator_name, operator_source, routing, address_array[i], type, field_number, value, condition, dllLocation, className, method));
+                operatorCount++;
+            }
         }
     }
 }
