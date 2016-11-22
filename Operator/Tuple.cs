@@ -16,6 +16,14 @@ namespace DADstorm
             tuplesArray.Add(x);
         }
 
+        public void addToList(ListOfTuples list)
+        {
+            for(int i = 0; i < list.tuplesArray.Count; i++)
+            {
+                addToList(list.tuplesArray[i]);
+            }
+        }
+
         public void showAll()
         {
             foreach (Tuple x in tuplesArray) {

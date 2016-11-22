@@ -48,6 +48,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enum.cs" />
+    <Compile Include="Exception\ConnectionException.cs" />
     <Compile Include="Exception\InvalidInputException.cs" />
     <Compile Include="Executor\CountExecutor.cs" />
     <Compile Include="Executor\CustomExecutor.cs" />

@@ -71,33 +71,42 @@ namespace DADstorm
         {
             Console.WriteLine("Operator review... name: {0}, id: {1}, repl_factor: {2}, port:{3}, spec: {4}", information.name, information.id, information.repl_factor, information.port, information.type);
             
-            // WE HAVE TO SOLVE PROBLEM WITH WAITING
-            
-            if (information.port == 12001)
-                Thread.Sleep(2000);
-            if (information.port == 12002)
-                Thread.Sleep(6000);
-            if (information.port == 12003)
-                Thread.Sleep(10000);
-            
             foreach (string operatorInput in information.inputsource)
             {
-                if (Regex.IsMatch(operatorInput, "^OP\\d+$")) //operator in format OP1, OP2, ..., OPn
+                if (isOperator(operatorInput)) //operator in format OP1, OP2, ..., OPn
                 {
-                    connectToOperator(operatorInput);
+                    EventWaitHandle handleInput = new EventWaitHandle(false, EventResetMode.AutoReset, operatorInput);
+                    Console.WriteLine("Waiting for input from " + operatorInput);
+                    handleInput.WaitOne();
+                    Console.WriteLine("Resuming execution");
+                    input.addToList(connectToOperator(operatorInput));
                 }
                 else // input file
                 {
-                    connectToFile(operatorInput);
+                    input.addToList(connectToFile(operatorInput));
                 }
             }
+            informationUploaded = true;
             createOutput();
+
+            // Release all outputs
+            foreach(string operatorInput in information.inputsource)
+            {
+                EventWaitHandle handleOutput = new EventWaitHandle(false, EventResetMode.AutoReset, information.name);
+                handleOutput.Set();
+                Console.WriteLine("Released output");
+            }
+        }
+
+        public bool isOperator(string operatorInput)
+        {
+            return Regex.IsMatch(operatorInput, "^OP\\d+$");
         }
 
         /**
          * Connect to an Operator. Connect via Marshalling, than transfer its output to this input.
          */
-        public void connectToOperator(string operatorInput)
+        public ListOfTuples connectToOperator(string operatorInput)
         {
             int porttoconnect = getPortToInput(operatorInput);
             Console.WriteLine("Operator connecting to OP: " + operatorInput + " , by port: " + porttoconnect);
@@ -111,14 +120,13 @@ namespace DADstorm
             if (operatorImage == null)
             {
                 Console.WriteLine("Could not locate server ---> Can´t connect to :" + operatorInput);
+                throw new ConnectionException();
             }
             else
             {
-                input = operatorImage.getOutput();
                 Console.WriteLine("Connected to INPUT: " + operatorInput);
-                Thread.Sleep(3000);
+                return operatorImage.getOutput();
             }
-            informationUploaded = true;
         }
 
         // TODO: Implement different Routing options
@@ -150,11 +158,12 @@ namespace DADstorm
         /**
          * Connect to a file. Open a StreamReader on the file and parse its contents.
          */
-        public void connectToFile(string path)
+        public ListOfTuples connectToFile(string path)
         {
             string line;
             Tuple inputTuple;
             List<string> listItems;
+            ListOfTuples result = new ListOfTuples();
             System.IO.StreamReader file = new System.IO.StreamReader("..\\..\\doc\\" + path);
 
             while ((line = file.ReadLine()) != null)
@@ -170,12 +179,12 @@ namespace DADstorm
                             listItems.Add(item.Trim(' ').Trim('"'));
                         }
                         inputTuple = new Tuple(listItems);
-                        input.addToList(inputTuple);
+                        result.addToList(inputTuple);
                     }
                 }
             }
-            informationUploaded = true;
             file.Close();
+            return result;
         }
 
         public void createOutput()
