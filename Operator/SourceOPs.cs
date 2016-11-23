@@ -16,5 +16,15 @@ namespace DADstorm
             this.name = name;
             this.portnumber = portnumber;
         }
+
+        public override bool Equals(object obj)
+        {
+            if(obj.GetType() == typeof(SourceOPs))
+            {
+                SourceOPs that = (SourceOPs)obj;
+                return this.name.Equals(that.name) && this.portnumber == that.portnumber;
+            }
+            return false;
+        }
     }
 }

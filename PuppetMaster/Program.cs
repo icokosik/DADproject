@@ -21,6 +21,7 @@ namespace DADstorm
         static void Main(string[] args)
         {
             initPuppetMaster();
+            setOperatorOutputs();
             
             // Delegate the startup of all Operators to ThreadOperators
             foreach (OperatorInformation info in operatorsArray)
@@ -61,6 +62,23 @@ namespace DADstorm
             ConfigFile config = new ConfigFile();
             logging = config.returnLogging();
             operatorsArray = config.getOperatorsArray();
+        }
+
+        /*
+         * For every Operator, set itself as outputOperator at all of its inputOperators.
+         */
+        public static void setOperatorOutputs()
+        {
+            foreach (OperatorInformation info in operatorsArray)
+            {
+                foreach(string input in info.inputsource)
+                {
+                    foreach(OperatorInformation info2 in operatorsArray.FindAll(x => x.name.Equals(input)))
+                    {
+                        info2.outputs.Add(sourceoperators.Find(x => x.name.Equals(info.name) && x.portnumber == info.port));
+                    }
+                }
+            }
         }
         
         public void saveToLogFile(string logLine)

@@ -54,7 +54,6 @@ namespace DADstorm
             {
                 Console.WriteLine("OP{0} is connected to PM, starting upload sourceoperators and operatorinformation to Operator", information.id);
                 op.setInformation(information);
-                op.setSourceOPs(sourceoperators);
                 Console.WriteLine("Finished uploading to OP{0}", information.id);
             }
         }

@@ -59,6 +59,7 @@
     <Compile Include="Executor\UniqExecutor.cs" />
     <Compile Include="OperatorInformation.cs" />
     <Compile Include="Operator.cs" />
+    <Compile Include="OperatorInputHandler.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SourceOPs.cs" />

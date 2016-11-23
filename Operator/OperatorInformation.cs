@@ -19,6 +19,7 @@ namespace DADstorm
         public string name;
         public int repl_factor;
         string address;
+        public List<SourceOPs> outputs;
 
         /**
          * FilterOperator
@@ -35,14 +36,15 @@ namespace DADstorm
         public string method;
 
         public OperatorInformation() { }
-        public OperatorInformation(int id, string name, List<string> inputsource, RoutingOption routing, string address, OperatorSpec type, int fieldnumber,
-            string value, FilterCondition condition, string dllLocation,string className, string method) {
+        public OperatorInformation(int id, string name, List<string> inputsource, RoutingOption routing, string address,
+            OperatorSpec type, int fieldnumber, string value, FilterCondition condition, string dllLocation,string className, string method) {
             this.id = id;
             this.name = name;
             this.inputsource = inputsource;
             this.routing = routing;
             this.address = address;
             this.type = type;
+            this.outputs = new List<SourceOPs>();
 
             this.fieldnumber = fieldnumber;
             this.value = value;

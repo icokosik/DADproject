@@ -1,27 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Runtime.Remoting;
-using System.Runtime.Remoting.Channels;
-using System.Runtime.Remoting.Channels.Tcp;
-using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
-using System.Threading.Tasks;
 
 namespace DADstorm
 {
-    
+
     public class Operator : MarshalByRefObject
     {
         private OperatorInformation information = new OperatorInformation();
-        private List<SourceOPs> sourceoperators = new List<SourceOPs>();
+        private List<SourceOPs> inputRequesters = new List<SourceOPs>();
+        private List<SourceOPs> outputOperators = new List<SourceOPs>();
 
         private ListOfTuples input = new ListOfTuples();
         private ListOfTuples output = new ListOfTuples();
-
-        private string stringbuilder;
+        
+        private ListOfTuples test = new ListOfTuples();
+        private bool initialized = false;
         private bool informationUploaded = false;
         private IExecutor executor;
         
@@ -64,22 +59,75 @@ namespace DADstorm
             }
         }
         
+        public void setOutputOperator()
+        {
+            // For every Operator type requesting, select the right instance
+            List<SourceOPs> tempList = new List<SourceOPs>(information.outputs);
+            while (tempList.Count > 0)
+            {
+                SourceOPs s = tempList[0];
+                List<SourceOPs> candidates = tempList.FindAll(x => x.name == s.name);
+
+                switch (information.routing)
+                {
+                    case RoutingOption.PRIMARY:
+                        outputOperators.Add(getPrimary(candidates, s.name));
+                        break;
+                    case RoutingOption.HASHING:
+                        outputOperators.Add(getHashing(candidates, s.name));
+                        break;
+                    case RoutingOption.RANDOM:
+                        outputOperators.Add(getRandom(candidates, s.name));
+                        break;
+                }
+                tempList.RemoveAll(x => x.name == s.name);
+            }
+        }
+        
+        public SourceOPs getPrimary(List<SourceOPs> list, string name)
+        {
+            foreach (SourceOPs source in list)
+            {
+                if (source.name == name)
+                    return source;
+            }
+            return null;
+        }
+
+        public SourceOPs getHashing(List<SourceOPs> list, string name)
+        {
+            return getPrimary(list, name);
+        }
+
+        public SourceOPs getRandom(List<SourceOPs> list, string name)
+        {
+            List<SourceOPs> outputCandidates = new List<SourceOPs>();
+            foreach(SourceOPs op in list)
+            {
+                if(op.name.Equals(name))
+                {
+                    outputCandidates.Add(op);
+                }
+            }
+            Random rand = new Random();
+            return outputCandidates[rand.Next(outputCandidates.Count)];
+        }
+        
         /**
          * Connect to the input. This can either be a file or another operator.
          */
         public void connectToInput()
         {
-            Console.WriteLine("Operator review... name: {0}, id: {1}, repl_factor: {2}, port:{3}, spec: {4}", information.name, information.id, information.repl_factor, information.port, information.type);
+            Console.WriteLine("Operator review... name: {0}, id: {1}, port:{2}, spec: {3}", information.name, information.id, information.port, information.type);
             
+            // Collect all input Tuples from all input sources
             foreach (string operatorInput in information.inputsource)
             {
                 if (isOperator(operatorInput)) //operator in format OP1, OP2, ..., OPn
                 {
-                    EventWaitHandle handleInput = new EventWaitHandle(false, EventResetMode.AutoReset, operatorInput);
-                    Console.WriteLine("Waiting for input from " + operatorInput);
-                    handleInput.WaitOne();
-                    Console.WriteLine("Resuming execution");
-                    input.addToList(connectToOperator(operatorInput));
+                    // Wait until signalled that the input is uploaded by the inputOperator
+                    EventWaitHandle inputReadySignaller = new EventWaitHandle(false, EventResetMode.AutoReset, operatorInput + information.name + information.port);
+                    inputReadySignaller.WaitOne();
                 }
                 else // input file
                 {
@@ -87,15 +135,6 @@ namespace DADstorm
                 }
             }
             informationUploaded = true;
-            createOutput();
-
-            // Release all outputs
-            foreach(string operatorInput in information.inputsource)
-            {
-                EventWaitHandle handleOutput = new EventWaitHandle(false, EventResetMode.AutoReset, information.name);
-                handleOutput.Set();
-                Console.WriteLine("Released output");
-            }
         }
 
         public bool isOperator(string operatorInput)
@@ -103,56 +142,27 @@ namespace DADstorm
             return Regex.IsMatch(operatorInput, "^OP\\d+$");
         }
 
-        /**
-         * Connect to an Operator. Connect via Marshalling, than transfer its output to this input.
-         */
-        public ListOfTuples connectToOperator(string operatorInput)
+        public void uploadToOutputs()
         {
-            int porttoconnect = getPortToInput(operatorInput);
-            Console.WriteLine("Operator connecting to OP: " + operatorInput + " , by port: " + porttoconnect);
-
-            //CLIENT
-            stringbuilder = "tcp://localhost:" + Convert.ToInt32(porttoconnect) + "/op";
-            Operator operatorImage = (Operator)Activator.GetObject(
-                           typeof(Operator),
-                           stringbuilder);
-
-            if (operatorImage == null)
+            foreach(SourceOPs outputOp in information.outputs)
             {
-                Console.WriteLine("Could not locate server ---> Can´t connect to :" + operatorInput);
-                throw new ConnectionException();
+                string address = "tcp://localhost:" + Convert.ToInt32(outputOp.portnumber) + "/op";
+                Operator outputImage = (Operator)Activator.GetObject(
+                               typeof(Operator),
+                               address);
+                if (outputImage == null)
+                    Console.WriteLine("Could not locate server ---> Can´t connect to :" + outputOp.name);
+                else
+                {
+                    while(!outputImage.isInitialized())
+                    {
+                        Thread.Sleep(200);
+                    }
+                    outputImage.addToInputTuples(getOutput());
+                    EventWaitHandle uploadReadySignal = new EventWaitHandle(false, EventResetMode.AutoReset, this.information.name + outputOp.name + outputOp.portnumber);
+                    uploadReadySignal.Set();
+                }
             }
-            else
-            {
-                Console.WriteLine("Connected to INPUT: " + operatorInput);
-                return operatorImage.getOutput();
-            }
-        }
-
-        // TODO: Implement different Routing options
-        public int getPortToInput(string name)
-        {
-            switch (information.routing)
-            {
-                case RoutingOption.PRIMARY:
-                    break;
-                case RoutingOption.HASHING:
-                    break;
-                case RoutingOption.RANDOM:
-                    break;
-            }
-            return getPrimary(name);
-        }
-        // TODO: Implement different Routing options
-        // (this should only be called by RoutingOption.PRIMARY
-        public int getPrimary(string name)
-        {
-            foreach (SourceOPs source in sourceoperators)
-            {
-                if (source.name == name)
-                    return source.portnumber;
-            }
-            return -1;
         }
 
         /**
@@ -203,10 +213,15 @@ namespace DADstorm
             output.showAll();
         }
 
+        public void addToInputTuples(ListOfTuples tuples)
+        {
+            input.addToList(tuples);
+        }
+
         /// <summary>
         /// Getters and Setters
         /// </summary>
-        
+
         public ListOfTuples getInput()
         {
             return this.input;
@@ -238,14 +253,14 @@ namespace DADstorm
             return informationUploaded;
         }
 
-        public void setSourceOPs(List<SourceOPs> x)
+        public bool isInitialized()
         {
-            sourceoperators = x;
+            return initialized;
         }
 
-        public List<SourceOPs> getSourceOPs()
+        public void setInitialized(bool v)
         {
-            return sourceoperators;
+            initialized = v;
         }
     }
 }

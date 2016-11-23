@@ -31,8 +31,9 @@ namespace DADstorm
             }
         }
     }
-
-    public class Tuple : MarshalByRefObject
+    
+    [Serializable]
+    public class Tuple
     {
         public static Tuple EMPTY = new Tuple(new List<string>());
 

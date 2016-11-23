@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels;
 using System.Runtime.Remoting.Channels.Tcp;
 using System.Threading;
-using System.IO;
-using System.Net.NetworkInformation;
 
 namespace DADstorm
 {
@@ -49,7 +43,12 @@ namespace DADstorm
             Console.WriteLine("___ FINALLY Connected to PM");
             
             operator1.setExecutor();
+            operator1.setOutputOperator();
+            operator1.setInitialized(true);
+
             operator1.connectToInput();
+            operator1.createOutput();
+            operator1.uploadToOutputs();
         }
     }
 }
