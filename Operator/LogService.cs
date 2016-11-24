@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace DADstorm
 {
-    class LogService : MarshalByRefObject
+    public class LogService : MarshalByRefObject
     {
         public List<string> recievedLogData = new List<string>();
         public Object thisLock = new Object();
 
-        
+
         public List<string> getLogData()
         {
             lock (thisLock)
@@ -20,13 +20,14 @@ namespace DADstorm
             }
         }
         //method is filled of string "replica_URL <list_of_tuple_fileds>"
-        public void setLogData(string outputOp)
+        public void setLogData(string url, string outputOp)
         {
             lock (thisLock)
             {
-                this.recievedLogData.Add(outputOp);
+                this.recievedLogData.Add(url + " " + outputOp);
             }
         }
+
         //clear list data
         public void Clear()
         {
@@ -35,6 +36,6 @@ namespace DADstorm
                 this.recievedLogData.Clear();
             }
         }
-        
+
     }
 }

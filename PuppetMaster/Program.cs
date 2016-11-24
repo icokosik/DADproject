@@ -13,7 +13,7 @@ namespace DADstorm
 {
     class Program
     {
-        public static LoggingLevel logging = LoggingLevel.LIGHT;
+        public static LoggingLevel logging;
         public static List<OperatorInformation> operatorsArray;
         public static List<SourceOPs> sourceoperators;
         public static int portnumber = 12000;
@@ -31,7 +31,7 @@ namespace DADstorm
                 Thread t1 = new Thread(new ThreadStart(op1.start));
                 t1.Start();
             }
-            
+            //logging = LoggingLevel.FULL;
             if (logging == LoggingLevel.FULL)
             {
                 ThreadLog log = new ThreadLog();

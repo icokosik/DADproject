@@ -30,6 +30,16 @@ namespace DADstorm
                 Console.WriteLine(x.ToString());
             }
         }
+
+        public string getDataForLog()
+        {
+            string data = null;
+            foreach (var x in tuplesArray)
+            {
+                data += x.ToString();
+
+            } return data;
+        }
     }
     
     [Serializable]

@@ -19,7 +19,7 @@ namespace DADstorm
         private bool initialized = false;
         private bool informationUploaded = false;
         private IExecutor executor;
-        
+                
         public Operator() : base() { }
 
         /**
@@ -211,6 +211,22 @@ namespace DADstorm
             }
             Console.WriteLine("OUTPUTS:   ----------");
             output.showAll();
+            
+            if (information.logging == LoggingLevel.FULL)
+            {
+               connectToLogService().setLogData(information.address,output.getDataForLog());
+            }
+        }
+
+        public LogService connectToLogService()
+        {
+            string stringbuilder = "tcp://localhost:10001/log";
+
+            LogService objLog = (LogService)Activator.GetObject(
+                          typeof(LogService),
+                          stringbuilder);
+
+            return objLog;
         }
 
         public void addToInputTuples(ListOfTuples tuples)
