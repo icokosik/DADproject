@@ -13,7 +13,6 @@ namespace DADstorm
         public UniqExecutor(OperatorInformation information)
         {
             this.information = information;
-            this.input = Tuple.EMPTY;
             this.passedItems = new List<string>();
         }
 

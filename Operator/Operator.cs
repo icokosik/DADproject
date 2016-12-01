@@ -71,46 +71,40 @@ namespace DADstorm
                 switch (information.routing)
                 {
                     case RoutingOption.PRIMARY:
-                        outputOperators.Add(getPrimary(candidates, s.name));
+                        Console.WriteLine(getPrimary(candidates).name + " on port " + getPrimary(candidates).portnumber);
+                        outputOperators.Add(getPrimary(candidates));
                         break;
                     case RoutingOption.HASHING:
-                        outputOperators.Add(getHashing(candidates, s.name));
+                        outputOperators.Add(getHashing(candidates));
                         break;
                     case RoutingOption.RANDOM:
-                        outputOperators.Add(getRandom(candidates, s.name));
+                        outputOperators.Add(getRandom(candidates));
                         break;
                 }
-                tempList.RemoveAll(x => x.name == s.name);
+                tempList.RemoveAll(x => x.name.Equals(s.name));
+                Console.WriteLine("OUTPUT OPERATORS");
+                foreach(SourceOPs op in outputOperators)
+                {
+                    Console.WriteLine(op.name + " on port ", op.portnumber);
+                }
             }
         }
         
-        public SourceOPs getPrimary(List<SourceOPs> list, string name)
+        public SourceOPs getPrimary(List<SourceOPs> list)
         {
-            foreach (SourceOPs source in list)
-            {
-                if (source.name == name)
-                    return source;
-            }
-            return null;
+            Console.WriteLine(list[0].name + " on port " + list[0].portnumber);
+            return list[0];
         }
 
-        public SourceOPs getHashing(List<SourceOPs> list, string name)
+        public SourceOPs getHashing(List<SourceOPs> list)
         {
-            return getPrimary(list, name);
+            return getPrimary(list);
         }
 
-        public SourceOPs getRandom(List<SourceOPs> list, string name)
+        public SourceOPs getRandom(List<SourceOPs> list)
         {
-            List<SourceOPs> outputCandidates = new List<SourceOPs>();
-            foreach(SourceOPs op in list)
-            {
-                if(op.name.Equals(name))
-                {
-                    outputCandidates.Add(op);
-                }
-            }
             Random rand = new Random();
-            return outputCandidates[rand.Next(outputCandidates.Count)];
+            return list[rand.Next(list.Count)];
         }
         
         /**
@@ -144,7 +138,7 @@ namespace DADstorm
 
         public void uploadToOutputs()
         {
-            foreach(SourceOPs outputOp in information.outputs)
+            foreach(SourceOPs outputOp in outputOperators)
             {
                 string address = "tcp://localhost:" + Convert.ToInt32(outputOp.portnumber) + "/op";
                 Operator outputImage = (Operator)Activator.GetObject(
@@ -207,7 +201,7 @@ namespace DADstorm
                 executor.setInput(t);
                 Tuple result = executor.execute();
                 if(result != Tuple.EMPTY)
-                    output.addToList(executor.execute());
+                    output.addToList(result);
             }
             Console.WriteLine("OUTPUTS:   ----------");
             output.showAll();

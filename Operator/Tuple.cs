@@ -68,6 +68,7 @@ namespace DADstorm
 
         public override string ToString()
         {
+            if (this.Equals(Tuple.EMPTY)) return "EMPTY";
             StringBuilder builder = new StringBuilder();
             foreach(Object obj in items)
             {
