@@ -35,6 +35,10 @@ namespace DADstorm
         public string dllLocation;
         public string className;
         public string method;
+        /**
+         * OutputOperator
+         */
+        public string path;
 
         public OperatorInformation() { }
         public OperatorInformation(int id, string name, List<string> inputsource, RoutingOption routing, string address,

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace DADstorm
@@ -14,6 +15,7 @@ namespace DADstorm
 
         List<string> allCMDinfile;
         public List<String> scripts=new List<string>();
+        private static List<string> startOPs = new List<string>();
 
         private static int operatorCount = 0;
 
@@ -239,6 +241,25 @@ namespace DADstorm
                 operatorsArray.Add(new OperatorInformation(operatorCount, operator_name, operator_source, routing, address_array[i], type, field_number, value, condition, dllLocation, className, method, logging));
                 operatorCount++;
             }
+            if(!containsInputOP(operator_source))
+            {
+                startOPs.Add(operator_name);
+            }
+        }
+
+        private static bool containsInputOP(List<string> inputs)
+        {
+            foreach(string input in inputs)
+            {
+                if (Regex.IsMatch(input, "^OP\\d+$"))
+                    return true;
+            }
+            return false;
+        }
+
+        public static List<string> getStartOPs()
+        {
+            return startOPs;
         }
     }
 }
