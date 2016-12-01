@@ -18,8 +18,9 @@ namespace DADstorm
         public int id;
         public string name;
         public int repl_factor;
-        string address;
+        public string address;
         public List<SourceOPs> outputs;
+        public LoggingLevel logging;
 
         /**
          * FilterOperator
@@ -37,7 +38,7 @@ namespace DADstorm
 
         public OperatorInformation() { }
         public OperatorInformation(int id, string name, List<string> inputsource, RoutingOption routing, string address,
-            OperatorSpec type, int fieldnumber, string value, FilterCondition condition, string dllLocation,string className, string method) {
+            OperatorSpec type, int fieldnumber, string value, FilterCondition condition, string dllLocation,string className, string method, LoggingLevel logging) {
             this.id = id;
             this.name = name;
             this.inputsource = inputsource;
@@ -53,6 +54,8 @@ namespace DADstorm
             this.dllLocation = dllLocation;
             this.className = className;
             this.method = method;
+
+            this.logging = logging;
         }
     }
 }

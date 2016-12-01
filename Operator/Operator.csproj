@@ -57,6 +57,7 @@
     <Compile Include="Executor\IExecutor.cs" />
     <Compile Include="Executor\FilterExecutor.cs" />
     <Compile Include="Executor\UniqExecutor.cs" />
+    <Compile Include="LogService.cs" />
     <Compile Include="OperatorInformation.cs" />
     <Compile Include="Operator.cs" />
     <Compile Include="Program.cs" />
