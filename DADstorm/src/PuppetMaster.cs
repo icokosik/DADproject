@@ -17,7 +17,7 @@ namespace DADstorm
         LoggingLevel logging = LoggingLevel.LIGHT;
         ArrayList mainCMD;
         ArrayList allCMDinfile;
-        ArrayList machinesIP = new ArrayList();
+        protected ArrayList machinesIP = new ArrayList();
         public PuppetMaster()
         {
         }

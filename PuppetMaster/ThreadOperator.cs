@@ -18,6 +18,9 @@ namespace DADstorm
         public OperatorInformation information;
         public List<SourceOPs> sourceoperators;
 
+        Process p = new Process();
+
+
         public ThreadOperator(OperatorInformation information, List<SourceOPs> sourceoperators)
         {
             this.information = information;
@@ -30,7 +33,6 @@ namespace DADstorm
          */
         public void start()
         {
-            Process p = new Process();
             p.StartInfo.WorkingDirectory = "..\\..\\..\\Operator\\bin\\Debug";
             p.StartInfo.FileName = "Operator.exe";
             p.StartInfo.Arguments = Convert.ToString(portnumber);
@@ -42,6 +44,7 @@ namespace DADstorm
                               typeof(Operator),
                               address);
             
+
             /**
              * Should maybe block until Operator is fully initialized and has his Marshalling setup
              */
@@ -56,6 +59,12 @@ namespace DADstorm
                 op.setInformation(information);
                 Console.WriteLine("Finished uploading to OP{0}", information.id);
             }
+        }
+        public void close()
+        {
+            p.CloseMainWindow();
+            // Free resources associated with process.
+            p.Close();
         }
     }
 }

@@ -10,7 +10,10 @@ namespace DADstorm
     {
         public LoggingLevel logging = LoggingLevel.LIGHT;
         private List<OperatorInformation> operatorsArray = new List<OperatorInformation>();
+        public List<ReplicasInOP> replicasArray=new List<ReplicasInOP>();
+
         List<string> allCMDinfile;
+        public List<String> scripts=new List<string>();
 
         private static int operatorCount = 0;
 
@@ -35,7 +38,6 @@ namespace DADstorm
         {
             return logging;
         }
-         
 
         public List<string> parseLineToArray(string text)
         {
@@ -45,34 +47,7 @@ namespace DADstorm
                 parseArray.Add(s);
             return parseArray;
         }
-
-
-        //PuppetMaster Commands !!!!!!!! IMPORTANT - waiting for the rest of program
-        public void startCMD(string operatorID) { }
-        public void intervalCMD(string operatorID, Int32 sleep_ms) { }
-        public void statusCMD() { }
-        public void crashCMD(string operatorID, string replicaID) { }
-        public void freezeCMD(string operatorID, string replicaID) { }
-        public void unfreezeCMD(string operatorID, string replicaID) { }
-        public void waitCMD(Int32 wait_ms) { }
-        public void test()
-        {
-            Task.Run(() =>
-            {
-                for (int i = 0; i < 100; i++)
-                {
-                    System.Console.WriteLine("int " + i);
-                }
-            });
-            Task.Run(() =>
-            {
-                for (int i = 1000; i < 1100; i++)
-                {
-                    System.Console.WriteLine("int " + i);
-                }
-            });
-        }
-
+        
         //Commands made by Config File ---> pick data from commands
         public void semantic(List<string> x)
         {
@@ -85,52 +60,15 @@ namespace DADstorm
                 logging = LoggingLevel.FULL;
             else logging = LoggingLevel.LIGHT;
         }
-        public void interval(List<string> x)
-        {
-            string operatorID = x[1].ToString();
-            Int32 sleep_ms = Convert.ToInt32(x[2].ToString());
-            intervalCMD(operatorID, sleep_ms);
-        }
-        public void status()
-        {
-            //STATUS of all nodes
-        }
-        public void start(List<string> x)
-        {
-            string operatorID = x[1].ToString();
-            startCMD(operatorID);
-        }
-        public void crash(List<string> x)
-        {
-            string operatorID = x[1].ToString();
-            string replicaID = x[2].ToString();
-            crashCMD(operatorID, replicaID);
-        }
-        public void freeze(List<string> x)
-        {
-            string operatorID = x[1].ToString();
-            string replicaID = x[2].ToString();
-            freezeCMD(operatorID, replicaID);
-        }
-        public void wait(List<string> x)
-        {
-            Int32 wait_ms = Convert.ToInt32(x[1].ToString());
-            waitCMD(wait_ms);
-        }
-        public void unfreeze(List<string> x)
-        {
-            string operatorID = x[1].ToString();
-            string replicaID = x[2].ToString();
-            unfreezeCMD(operatorID, replicaID);
-        }
-
-
+   
         public void commandRecognizer()
         {
             //...every line of ArrayList
             foreach (string line in allCMDinfile)
             {
                 List<string> x = parseLineToArray(line);
+
+                string[] scriptWords = { "Start", "Interval", "Status", "Freeze", "Unfreeze","Crash", "Wait" };
 
                 //header
                 if (line.Contains("Semantics"))
@@ -144,21 +82,10 @@ namespace DADstorm
                 //operator_id
                 if (line.Contains("input ops"))
                     operatorsSetUp(x);
-                //PuppetMaster to the stream processing nodes
-                if (line.Contains("Interval"))
-                    interval(x);
-                if (line.Contains("Status"))
-                    status();
-                if (line.Contains("Start"))
-                    start(x);
-                if (line.Contains("Crash"))
-                    crash(x);
-                if (line.Contains("Freeze"))
-                    freeze(x);
-                if (line.Contains("Wait"))
-                    wait(x);
-                if (line.Contains("Unfreeze"))
-                    unfreeze(x);
+                //script for PM
+                foreach(var check in scriptWords)
+                if (line.Contains(check))
+                    scripts.Add(line);
             }
         }
         
@@ -210,6 +137,7 @@ namespace DADstorm
                     string routinginput = Convert.ToString(x[i + 4]);
                     char[] delimiterChars = { '(', ')' };
                     string[] words = routinginput.Split(delimiterChars);
+                    
                     routingfunction = words[0];  //name of routing function
 
                     switch(routingfunction)
@@ -242,11 +170,13 @@ namespace DADstorm
                         input = Convert.ToString(x[i + counter + 1]);
                         string[] words2 = input.Split(',');
                         address_array.Add(words2[0]);
+                        replicasArray.Add(new ReplicasInOP(operator_name,words2[0],counter));
                         counter++;
                     } while (Convert.ToString(x[i + counter]).Contains(","));
                     //print
                     foreach (var u in address_array)
                         Console.WriteLine("----->address: " + u);
+                    
 
                 }
                 //operator spec OPERATOR_TYPE OPERATOR_PARAM1,. . ., OPERATOR_PARAMn

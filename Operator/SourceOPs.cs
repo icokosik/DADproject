@@ -6,6 +6,18 @@ using System.Threading.Tasks;
 
 namespace DADstorm
 {
+    public class ReplicasInOP
+    {
+        public String operatorID;
+        public String replicaURL;
+        public int replicaID;
+        public ReplicasInOP(String operatorID,String replicaURL,int replicaID)
+        {
+            this.operatorID = operatorID;
+            this.replicaURL = replicaURL;
+            this.replicaID = replicaID;
+        }
+    }
     [Serializable]
     public class SourceOPs
     {

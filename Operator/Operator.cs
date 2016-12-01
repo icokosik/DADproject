@@ -8,6 +8,7 @@ namespace DADstorm
 
     public class Operator : MarshalByRefObject
     {
+        private String operatorID;
         private OperatorInformation information = new OperatorInformation();
         private List<SourceOPs> inputRequesters = new List<SourceOPs>();
         private List<SourceOPs> outputOperators = new List<SourceOPs>();
@@ -19,6 +20,10 @@ namespace DADstorm
         private bool initialized = false;
         private bool informationUploaded = false;
         private IExecutor executor;
+
+        private int interval=0;
+        private bool start = false;
+        private bool freeze = false;
                 
         public Operator() : base() { }
 
@@ -82,6 +87,7 @@ namespace DADstorm
                 }
                 tempList.RemoveAll(x => x.name == s.name);
             }
+
         }
         
         public SourceOPs getPrimary(List<SourceOPs> list, string name)
@@ -118,8 +124,7 @@ namespace DADstorm
          */
         public void connectToInput()
         {
-            Console.WriteLine("Operator review... name: {0}, id: {1}, port:{2}, spec: {3}", information.name, information.id, information.port, information.type);
-            
+            printStatus();            
             // Collect all input Tuples from all input sources
             foreach (string operatorInput in information.inputsource)
             {
@@ -135,6 +140,18 @@ namespace DADstorm
                 }
             }
             informationUploaded = true;
+            
+
+            //freeze
+            while (freeze)
+            {
+                Console.WriteLine("Waiting for ´Unfreeze´ command. Value of Freeze = " + freeze);
+                Thread.Sleep(500);
+            }
+
+            //generate output
+            tryCreateOutput();
+
         }
 
         public bool isOperator(string operatorInput)
@@ -163,6 +180,8 @@ namespace DADstorm
                     uploadReadySignal.Set();
                 }
             }
+
+           
         }
 
         /**
@@ -197,8 +216,21 @@ namespace DADstorm
             return result;
         }
 
+        public void tryCreateOutput()
+        {
+            while(!start)
+            {
+                Console.WriteLine("Waiting for ´Start´ command. Value of Start = "+start);
+                Thread.Sleep(500);
+            }
+            createOutput();
+
+        }
+
         public void createOutput()
         {
+            Thread.Sleep(interval);
+
             //output = input;
             Console.WriteLine("INPUTS:  --------");
             input.showAll();
@@ -216,6 +248,10 @@ namespace DADstorm
             {
                connectToLogService().setLogData(information.address,output.getDataForLog());
             }
+
+
+            //after calculation send to output
+            uploadToOutputs();
         }
 
         public LogService connectToLogService()
@@ -234,6 +270,13 @@ namespace DADstorm
             input.addToList(tuples);
         }
 
+
+        public void printStatus()
+        {
+            Console.WriteLine("Operator name: "+ information.name);
+            Console.WriteLine("IP address: " + information.port);
+            Console.WriteLine("Type: " + information.type);
+        }
         /// <summary>
         /// Getters and Setters
         /// </summary>
@@ -277,6 +320,15 @@ namespace DADstorm
         public void setInitialized(bool v)
         {
             initialized = v;
+        }
+
+        public void setSleep(int x)
+        { this.interval = x; }
+        public void setFreeze(Boolean x)
+        { this.freeze = x; }
+        public void setStart(bool x)
+        {
+            this.start = x;
         }
     }
 }
