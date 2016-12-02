@@ -16,15 +16,55 @@ namespace DADstorm
         public static LoggingLevel logging;
         public static List<OperatorInformation> operatorsArray;
         public static List<SourceOPs> sourceoperators;
+
+        /// <summary>
+        ///replicasArray with wrong replicaID for now... 
+        /// </summary>
+        public static List<ReplicasInOP> replicasArray;
+        public static List<MachineWithReplicas> machines;
+
+        public static List<String> scripts;
         public static int portnumber = 12000;
 
+        //  public static List<Thread> threadsArray=new List<Thread>();
         static void Main(string[] args)
         {
+
+
             initPuppetMaster();
             setOperatorOutputs();
-            DAGComputations();
-            
+
+            //RUN MACHINES
+            foreach (MachineWithReplicas x in machines)
+            {
+                Console.WriteLine("Executing Machine: " + x.machineURL);
+
+                Process p = new Process();
+                p.StartInfo.WorkingDirectory = "..\\..\\..\\Machine\\bin\\Debug";
+                p.StartInfo.FileName = "Machine.exe";
+                p.StartInfo.Arguments = Convert.ToString(x.machineIDport);
+                p.Start();
+
+
+                MachinePackage mp = new MachinePackage();
+                mp.machines = machines;
+                ThreadMachine m = new ThreadMachine(x.machineIDport, mp);
+                Thread t1 = new Thread(new ThreadStart(m.start));
+                t1.Start();
+            }
+
+            Thread.Sleep(2000);
+
+            foreach (MachineWithReplicas x in machines)
+            {
+
+
+            }
+
+
+            //RUN communications PM -> Machine
             // Delegate the startup of all Operators to ThreadOperators
+
             foreach (OperatorInformation info in operatorsArray)
             {
                 Console.WriteLine("Starting new Operator in Thread with port: " + info.port);
@@ -32,6 +72,8 @@ namespace DADstorm
                 Thread t1 = new Thread(new ThreadStart(op1.start));
                 t1.Start();
             }
+
+
             //logging = LoggingLevel.FULL;
             if (logging == LoggingLevel.FULL)
             {
@@ -39,8 +81,11 @@ namespace DADstorm
                 Thread t2 = new Thread(new ThreadStart(log.start));
                 t2.Start();
             }
-            
-            Console.ReadLine();
+
+            //commands from config file
+            //runScript();
+            //commands from console
+            consoleCommands();
         }
 
         public static void initPuppetMaster()
@@ -62,7 +107,16 @@ namespace DADstorm
         {
             ConfigFile config = new ConfigFile();
             logging = config.returnLogging();
+            replicasArray = config.replicasArray;
             operatorsArray = config.getOperatorsArray();
+            machines = config.machines;
+            scripts = config.scripts;
+        }
+
+        public static void runScript()
+        {
+            foreach (var x in scripts)
+                Commands(x);
         }
 
         /*
@@ -72,9 +126,9 @@ namespace DADstorm
         {
             foreach (OperatorInformation info in operatorsArray)
             {
-                foreach(string input in info.inputsource)
+                foreach (string input in info.inputsource)
                 {
-                    foreach(OperatorInformation info2 in operatorsArray.FindAll(x => x.name.Equals(input)))
+                    foreach (OperatorInformation info2 in operatorsArray.FindAll(x => x.name.Equals(input)))
                     {
                         info2.outputs.Add(sourceoperators.Find(x => x.name.Equals(info.name) && x.portnumber == info.port));
                     }
@@ -82,37 +136,206 @@ namespace DADstorm
             }
         }
 
-        public static void DAGComputations()
+        public void saveToLogFile(string logLine)
         {
-            checkAcyclicGraph();
-            chooseStartOP();
-            addOutputOP();
+            System.IO.File.AppendAllText("LoggingFile.txt", logLine + Environment.NewLine);
         }
 
-        private static void checkAcyclicGraph()
+        //COMMANDS
+        public static void Commands(String inputString)
         {
-
-        }
-
-        private static void chooseStartOP()
-        {
-            List<string> startOPs = ConfigFile.getStartOPs();
-            foreach(string starter in startOPs)
+            List<String> mainCMD = mainCMDparser(inputString);
+            switch (Convert.ToString(mainCMD[0]))
             {
-                
+                case "Start":
+                    start(mainCMD);
+                    break;
+                case "Interval":
+                    interval(mainCMD);
+                    break;
+                case "Status":
+                    status();
+                    break;
+                case "Crash":
+                    crash(mainCMD);
+                    break;
+                case "Freeze":
+                    freeze(mainCMD);
+                    break;
+                case "Unfreeze":
+                    unfreeze(mainCMD);
+                    break;
+                case "Wait":
+                    wait(mainCMD);
+                    break;
+
+                default:
+                    Console.WriteLine("Command doesn´t exist");
+                    break;
+            }
+        }
+        public static void consoleCommands()
+        {
+
+            while (true)
+            {
+                Console.WriteLine("\n-->Commands:");
+                Console.WriteLine("Start -operator_id");
+                Console.WriteLine("Interval operator id x ms");
+                Console.WriteLine("Status");
+                Console.WriteLine("Crash processname");
+                Console.WriteLine("Freeze processname");
+                Console.WriteLine("Unfreeze processname");
+                Console.WriteLine("Wait x ms");
+                Console.WriteLine("Load (config file)");
+
+                String inputString = Console.ReadLine();
+                Commands(inputString);
             }
         }
 
-        private static void addOutputOP()
+        public static List<String> mainCMDparser(string s)
         {
+            List<String> array = new List<String>();
+            string[] words = s.Split(' ');
+            foreach (string word in words)
+                array.Add(word);
+            return array;
+        }
+
+
+        public static String returnAddressOfOperator(List<String> x)
+        {
+            string operatorID = x[1].ToString();
+            string address = "";
+            foreach (var y in operatorsArray)
+                if (y.name.Equals(operatorID))
+                    address = "tcp://localhost:" + y.port + "/op";
+            return address;
+        }
+
+        public static void start(List<String> x)
+        {
+            //temporary code - start
+            string operatorID = x[1].ToString();
+            string address = "";
+            foreach (var y in operatorsArray)
+                if (y.name.Equals(operatorID))
+                {
+                    address = "tcp://localhost:" + y.port + "/op";
+                    Operator op = (Operator)Activator.GetObject(
+                                                typeof(Operator),
+                                                address);
+                    op.setStart(true);
+                }
+            //temporary code - finish
+
+
+            /*
+            Operator op = (Operator)Activator.GetObject(
+                             typeof(Operator),
+                             returnAddressOfOperator(x));
+            op.createOutput();
+            */
+        }
+
+        public static void interval(List<String> x)
+        {
+            Int32 sleep_ms = Convert.ToInt32(x[2].ToString());
+            string operatorID = x[1].ToString();
+            string address = "";
+            Operator op;
+            foreach (var m in machines)
+                if (m.operatorID.Equals(operatorID))
+                {
+                    foreach (var n in m.replicas)
+                    {
+                        address = "tcp://localhost:" + n.replicaIDport + "/op";
+                        op = (Operator)Activator.GetObject(
+                                                    typeof(Operator),
+                                                    address);
+                        op.setSleep(sleep_ms);
+                    }
+                }
 
         }
-        
-        public void saveToLogFile(string logLine)
+
+        public static void status()
         {
-            System.IO.File.AppendAllText("LoggingFile.txt", logLine + Environment.NewLine);            
+            String address;
+            Operator op;
+            foreach (var m in machines)
+                foreach (var n in m.replicas)
+                {
+                    address = "tcp://localhost:" + n.replicaIDport + "/op";
+                    op = (Operator)Activator.GetObject(
+                                                typeof(Operator),
+                                                address);
+                    op.printStatus();
+                }
         }
-        
+
+        public static void crash(List<String> x)
+        {
+            //mathias, help me please
+            string operatorID = x[1].ToString();
+            string replicaID = x[2].ToString();
+            string url = "";
+            int i = 0;
+
+            foreach (var m in machines)
+                if (m.operatorID.Equals(operatorID))
+                    i = m.replicas[Convert.ToInt32(replicaID)].replicaIDport;
+
+            url = "tcp://localhost:" + Convert.ToString(i) + "/op";
+
+            Operator op = (Operator)Activator.GetObject(
+                                  typeof(Operator),
+                                  url);
+            op.crash();
+        }
+
+
+        public static void freeze(List<String> x)
+        {
+            string operatorID = x[1].ToString();
+            string replicaID = x[2].ToString();
+            string address;
+            Operator op;
+
+            foreach (var m in machines)
+                if (m.operatorID.Equals(operatorID))
+                {
+                    address = "tcp://localhost:" + m.replicas[Convert.ToInt32(replicaID)].replicaIDport + "/op";
+                    op = (Operator)Activator.GetObject(
+                                                typeof(Operator),
+                                                address);
+                    op.setFreeze(true);
+                }
+
+        }
+        public static void unfreeze(List<String> x)
+        {
+            string operatorID = x[1].ToString();
+            string replicaID = x[2].ToString();
+            string address;
+            Operator op;
+
+            foreach (var m in machines)
+                if (m.operatorID.Equals(operatorID))
+                {
+                    address = "tcp://localhost:" + m.replicas[Convert.ToInt32(replicaID)].replicaIDport + "/op";
+                    op = (Operator)Activator.GetObject(
+                                                typeof(Operator),
+                                                address);
+                    op.setFreeze(false);
+                }
+        }
+
+        public static void wait(List<String> x)
+        {
+            Thread.Sleep(Convert.ToInt32(x[1]));
+        }
     }
-    
+
 }

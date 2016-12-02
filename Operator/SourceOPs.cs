@@ -6,16 +6,27 @@ using System.Threading.Tasks;
 
 namespace DADstorm
 {
+    
     public class ReplicasInOP
     {
+        public String machineURL;
         public String operatorID;
         public String replicaURL;
         public int replicaID;
-        public ReplicasInOP(String operatorID,String replicaURL,int replicaID)
+
+        //temporary
+        public int replicaIDport;
+        public ReplicasInOP(String machineURL,String operatorID,String replicaURL,int replicaID,int port)
         {
+            this.machineURL = machineURL;
             this.operatorID = operatorID;
             this.replicaURL = replicaURL;
             this.replicaID = replicaID;
+            this.replicaIDport = port;
+        }
+        public void setPort(int port)
+        {
+            this.replicaIDport = port;
         }
     }
     [Serializable]

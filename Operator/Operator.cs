@@ -271,6 +271,11 @@ namespace DADstorm
             Console.WriteLine("IP address: " + information.port);
             Console.WriteLine("Type: " + information.type);
         }
+
+        public void crash()
+        {
+            Environment.Exit(0);
+        }
         /// <summary>
         /// Getters and Setters
         /// </summary>

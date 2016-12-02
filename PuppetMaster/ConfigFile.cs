@@ -12,11 +12,13 @@ namespace DADstorm
         public LoggingLevel logging = LoggingLevel.LIGHT;
         private List<OperatorInformation> operatorsArray = new List<OperatorInformation>();
         public List<ReplicasInOP> replicasArray=new List<ReplicasInOP>();
-
+        public List<MachineWithReplicas> machines = new List<MachineWithReplicas>();
         List<string> allCMDinfile;
         public List<String> scripts=new List<string>();
         private static List<string> startOPs = new List<string>();
 
+        public int port = 12000;
+        public int portM = 13000;
         private static int operatorCount = 0;
 
         public ConfigFile()
@@ -172,8 +174,32 @@ namespace DADstorm
                         input = Convert.ToString(x[i + counter + 1]);
                         string[] words2 = input.Split(',');
                         address_array.Add(words2[0]);
-                        replicasArray.Add(new ReplicasInOP(operator_name,words2[0],counter));
+                        String ip = words2[0].Split(':')[0]+ ":"+words2[0].Split(':')[1];
+
+                        Boolean existsMachine = false;
+                        foreach (var m in machines)
+                        {
+                            if (m.machineURL.Equals(ip))
+                             existsMachine = true;
+                        }
+
+                        if (!existsMachine)
+                        {
+                            machines.Add(new MachineWithReplicas(ip, portM, operator_name));
+                            portM++;
+                        }
+
+                            foreach (var z in machines)
+                            {
+                                if (z.machineURL.Equals(ip))
+                                    z.addReplica(new Replica(words2[0],counter,port));
+                            }
+                        
+                       
+                       // replicasArray.Add(new ReplicasInOP(ip,operator_name,words2[0],counter,port));
                         counter++;
+                        port++;
+                        
                     } while (Convert.ToString(x[i + counter]).Contains(","));
                     //print
                     foreach (var u in address_array)
