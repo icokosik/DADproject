@@ -17,10 +17,8 @@ namespace DADstorm
         int portnumber;
         public OperatorInformation information;
         public List<SourceOPs> sourceoperators;
-
         Process p = new Process();
-
-
+        
         public ThreadOperator(OperatorInformation information, List<SourceOPs> sourceoperators)
         {
             this.information = information;
@@ -33,18 +31,19 @@ namespace DADstorm
          */
         public void start()
         {
+            /*
             p.StartInfo.WorkingDirectory = "..\\..\\..\\Operator\\bin\\Debug";
             p.StartInfo.FileName = "Operator.exe";
             p.StartInfo.Arguments = Convert.ToString(portnumber);
             p.Start();
-            
+            */
+
             // Connect to Operator
             string address = "tcp://localhost:" + Convert.ToInt32(portnumber) + "/op";
             Operator op = (Operator)Activator.GetObject(
                               typeof(Operator),
                               address);
             
-
             /**
              * Should maybe block until Operator is fully initialized and has his Marshalling setup
              */

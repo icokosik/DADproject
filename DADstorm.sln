@@ -8,8 +8,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Operator", "Operator\Operator.csproj", "{73FB3F40-9274-482B-BF03-2D0E7159CECC}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PuppetMaster", "PuppetMaster\PuppetMaster.csproj", "{890B6CD2-E016-413E-97D3-D36CAE1D65E7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{62D2EDC6-92C8-4A2B-A004-550629640C31} = {62D2EDC6-92C8-4A2B-A004-550629640C31}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CustomOperators", "CustomOperators\CustomOperators.csproj", "{54AA3D13-2668-4430-9C9C-25630840A520}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Machine", "Machine\Machine.csproj", "{62D2EDC6-92C8-4A2B-A004-550629640C31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,6 +48,12 @@ Global
 		{54AA3D13-2668-4430-9C9C-25630840A520}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{54AA3D13-2668-4430-9C9C-25630840A520}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{54AA3D13-2668-4430-9C9C-25630840A520}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62D2EDC6-92C8-4A2B-A004-550629640C31}.DADstorm_complete|Any CPU.ActiveCfg = Debug|Any CPU
+		{62D2EDC6-92C8-4A2B-A004-550629640C31}.DADstorm_complete|Any CPU.Build.0 = Debug|Any CPU
+		{62D2EDC6-92C8-4A2B-A004-550629640C31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62D2EDC6-92C8-4A2B-A004-550629640C31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62D2EDC6-92C8-4A2B-A004-550629640C31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62D2EDC6-92C8-4A2B-A004-550629640C31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -10,13 +10,14 @@ namespace DADstorm
     public class Program
     {
         private static int puppetMasterPort;
-        private static string operatorID;
+        public static String machineURL;
 
         static void Main(string[] args)
         {
             puppetMasterPort = Int32.Parse(args[0]);
-            initOperator(puppetMasterPort);          
-            
+            initOperator(puppetMasterPort);
+
+          //  Environment.Exit(0);
             Console.ReadLine();
         }
 
@@ -26,7 +27,7 @@ namespace DADstorm
          */
         public static void initOperator(int port)
         {
-            Console.WriteLine("Establishing connection with PuppetMaster at port " + port);
+            Console.WriteLine("I´m Operator: Establishing connection with PuppetMaster at port " + port);
 
             //SERVER
             TcpChannel channel = new TcpChannel(port);
@@ -51,39 +52,10 @@ namespace DADstorm
             operator1.connectToInput();
 
             //connectToOutput() is now PM command
-            
+
         }
 
-
-
-        // Prepared commands for Machines and Operators ---> they will be located here until we create "Machine"
-        public void status()
-        {
-            //STATUS of all nodes
-        }
-        public void crash(List<String> x)
-        {
-            string operatorID = x[1].ToString();
-            string replicaID = x[2].ToString();
-          //  crashCMD(operatorID, replicaID);
-        }
-        public void freeze(List<String> x)
-        {
-            string operatorID = x[1].ToString();
-            string replicaID = x[2].ToString();
-          //  freezeCMD(operatorID, replicaID);
-        }
-        public void wait(List<String> x)
-        {
-            Int32 wait_ms = Convert.ToInt32(x[1].ToString());
-         //   waitCMD(wait_ms);
-        }
-        public void unfreeze(List<String> x)
-        {
-            string operatorID = x[1].ToString();
-            string replicaID = x[2].ToString();
-           // unfreezeCMD(operatorID, replicaID);
-        }
+        
 
         
     }

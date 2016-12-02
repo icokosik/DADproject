@@ -58,6 +58,7 @@
     <Compile Include="Executor\FilterExecutor.cs" />
     <Compile Include="Executor\UniqExecutor.cs" />
     <Compile Include="LogService.cs" />
+    <Compile Include="MachineWithReplicas.cs" />
     <Compile Include="OperatorInformation.cs" />
     <Compile Include="Operator.cs" />
     <Compile Include="Program.cs" />
@@ -76,6 +77,9 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="doc\" />
+  </ItemGroup>
+  <ItemGroup>
+    <WCFMetadata Include="Service References\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
