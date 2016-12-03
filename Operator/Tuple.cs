@@ -10,6 +10,7 @@ namespace DADstorm
     public class ListOfTuples
     {
         public List<Tuple> tuplesArray = new List<Tuple>();
+        public OperatorSpec destinationOPType;
 
         public void addToList(Tuple x)
         {

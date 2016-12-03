@@ -13,7 +13,7 @@ namespace DADstorm
 
     public enum OperatorSpec
     {
-        UNIQ, COUNT, DUP, FILTER, CUSTOM
+        UNIQ, COUNT, DUP, FILTER, CUSTOM, OUT
     };
     
     public enum LoggingLevel

@@ -40,6 +40,7 @@ namespace DADstorm
 
             // Connect to Operator
             string address = "tcp://localhost:" + Convert.ToInt32(portnumber) + "/op";
+            Console.WriteLine("Trying to connect to address: " + address);
             Operator op = (Operator)Activator.GetObject(
                               typeof(Operator),
                               address);
@@ -54,7 +55,7 @@ namespace DADstorm
             }
             else
             {
-                Console.WriteLine("OP{0} is connected to PM, starting upload sourceoperators and operatorinformation to Operator", information.id);
+                Console.WriteLine("{0} is connected to PM, starting upload sourceoperators and operatorinformation to Operator", information.name);
                 op.setInformation(information);
                 Console.WriteLine("Finished uploading to OP{0}", information.id);
             }

@@ -56,6 +56,7 @@
     <Compile Include="Executor\Executor.cs" />
     <Compile Include="Executor\IExecutor.cs" />
     <Compile Include="Executor\FilterExecutor.cs" />
+    <Compile Include="Executor\OutputExecutor.cs" />
     <Compile Include="Executor\UniqExecutor.cs" />
     <Compile Include="LogService.cs" />
     <Compile Include="MachineWithReplicas.cs" />

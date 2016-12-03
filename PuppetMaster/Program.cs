@@ -92,6 +92,7 @@ namespace DADstorm
         {
             sourceoperators = new List<SourceOPs>();
             System.IO.File.Delete("LoggingFile.txt");
+            System.IO.File.Delete("..\\..\\..\\Operator\\doc\\Output.txt");
             loadConfigFile();
 
             // Add all Operators to the SourceOPs list. Also, set new port numbers (since everything is on local host, not on different ips)
@@ -134,6 +135,33 @@ namespace DADstorm
                     }
                 }
             }
+            
+            List<OperatorInformation> outputOps = new List<OperatorInformation>();
+            foreach (OperatorInformation info in operatorsArray)
+            {
+                if (info.outputs.Count == 0 && operatorsArray.FindAll(x => x.name.Equals("Out" + info.name)).Count == 0)
+                {
+                    OperatorInformation outinfo = new OperatorInformation();
+                    int operatorCount = ConfigFile.operatorCount;
+                    outinfo.id = operatorCount;
+                    outinfo.name = "Out" + info.name;
+                    outinfo.type = OperatorSpec.OUT;
+                    outinfo.port = portnumber;
+                    string ip = info.address.Split(':')[0] + ":" + info.address.Split(':')[1];
+                    outinfo.address = ip + ":" + (12500 + outinfo.id);
+                    Console.WriteLine("NEW OUT AT!! " + outinfo.address);
+                    outinfo.path = "..\\..\\doc\\output.txt";
+                    outinfo.inputsource = new List<string>() { info.name };
+                    outinfo.outputs = new List<SourceOPs>();
+                    outputOps.Add(outinfo);
+                    sourceoperators.Add(new SourceOPs(outinfo.name, outinfo.port));
+                    int id = machines.Find(x => x.machineURL.Equals(ip)).replicas.Count;
+                    machines.Find(x => x.machineURL.Equals(ip)).addReplica(new Replica(outinfo.address + "/op", id, outinfo.port));
+                    portnumber++;
+                    info.outputs.Add(new SourceOPs(outinfo.name, outinfo.port));
+                }
+            }
+            operatorsArray.AddRange(outputOps);
         }
 
         public void saveToLogFile(string logLine)
@@ -216,10 +244,13 @@ namespace DADstorm
 
         public static void start(List<String> x)
         {
+            Console.WriteLine("Start: " + x[1].ToString());
             //temporary code - start
             string operatorID = x[1].ToString();
             string address = "";
             foreach (var y in operatorsArray)
+            {
+                Console.WriteLine("Operator: " + y.name);
                 if (y.name.Equals(operatorID))
                 {
                     address = "tcp://localhost:" + y.port + "/op";
@@ -228,6 +259,7 @@ namespace DADstorm
                                                 address);
                     op.setStart(true);
                 }
+            }
             //temporary code - finish
 
 

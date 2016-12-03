@@ -19,7 +19,7 @@ namespace DADstorm
 
         public int port = 12000;
         public int portM = 13000;
-        private static int operatorCount = 0;
+        public static int operatorCount = 0;
 
         public ConfigFile()
         {
@@ -180,7 +180,7 @@ namespace DADstorm
                         foreach (var m in machines)
                         {
                             if (m.machineURL.Equals(ip))
-                             existsMachine = true;
+                                existsMachine = true;
                         }
 
                         if (!existsMachine)
@@ -189,11 +189,11 @@ namespace DADstorm
                             portM++;
                         }
 
-                            foreach (var z in machines)
-                            {
-                                if (z.machineURL.Equals(ip))
-                                    z.addReplica(new Replica(words2[0],counter,port));
-                            }
+                        foreach (var z in machines)
+                        {
+                            if (z.machineURL.Equals(ip))
+                                z.addReplica(new Replica(words2[0],counter,port));
+                        }
                         
                        
                        // replicasArray.Add(new ReplicasInOP(ip,operator_name,words2[0],counter,port));

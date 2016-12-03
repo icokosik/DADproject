@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Threading;
 
@@ -60,6 +61,9 @@ namespace DADstorm
                     break;
                 case OperatorSpec.UNIQ:
                     executor = new UniqExecutor(information);
+                    break;
+                case OperatorSpec.OUT:
+                    executor = new OutputExecutor(information);
                     break;
             }
         }
@@ -235,14 +239,17 @@ namespace DADstorm
                 if(result != Tuple.EMPTY)
                     output.addToList(result);
             }
+            output.destinationOPType = information.type;
             Console.WriteLine("OUTPUTS:   ----------");
             output.showAll();
-            
+
+            // Throws exceptions, needs to be fixed
+            /*
             if (information.logging == LoggingLevel.FULL)
             {
                connectToLogService().setLogData(information.address,output.getDataForLog());
             }
-
+            */
 
             //after calculation send to output
             uploadToOutputs();
@@ -252,9 +259,20 @@ namespace DADstorm
         {
             string stringbuilder = "tcp://localhost:10001/log";
 
+            Process[] list = Process.GetProcesses();
+            foreach(Process p in list)
+            {
+                Console.WriteLine(p.ToString());
+            }
+
+
             LogService objLog = (LogService)Activator.GetObject(
                           typeof(LogService),
                           stringbuilder);
+            if(objLog == null)
+            {
+                Console.WriteLine("Coudln't connect to LogService at address " + stringbuilder);
+            }
 
             return objLog;
         }
