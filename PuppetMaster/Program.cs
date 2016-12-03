@@ -13,6 +13,7 @@ namespace DADstorm
 {
     class Program
     {
+        public static bool running = true;
         public static LoggingLevel logging;
         public static List<OperatorInformation> operatorsArray;
         public static List<SourceOPs> sourceoperators;
@@ -117,7 +118,7 @@ namespace DADstorm
         public static void runScript()
         {
             foreach (var x in scripts)
-                Commands(x);
+                executeCommands(x);
         }
 
         /*
@@ -135,7 +136,7 @@ namespace DADstorm
                     }
                 }
             }
-            
+
             List<OperatorInformation> outputOps = new List<OperatorInformation>();
             foreach (OperatorInformation info in operatorsArray)
             {
@@ -170,31 +171,34 @@ namespace DADstorm
         }
 
         //COMMANDS
-        public static void Commands(String inputString)
+        public static void executeCommands(String inputString)
         {
             List<String> mainCMD = mainCMDparser(inputString);
             switch (Convert.ToString(mainCMD[0]))
             {
                 case "Start":
-                    start(mainCMD);
+                    Commands.start(mainCMD);
                     break;
                 case "Interval":
-                    interval(mainCMD);
+                    Commands.interval(mainCMD);
                     break;
                 case "Status":
-                    status();
+                    Commands.status();
                     break;
                 case "Crash":
-                    crash(mainCMD);
+                    Commands.crash(mainCMD);
                     break;
                 case "Freeze":
-                    freeze(mainCMD);
+                    Commands.freeze(mainCMD);
                     break;
                 case "Unfreeze":
-                    unfreeze(mainCMD);
+                    Commands.unfreeze(mainCMD);
                     break;
                 case "Wait":
-                    wait(mainCMD);
+                    Commands.wait(mainCMD);
+                    break;
+                case "Exit":
+                    Commands.exit();
                     break;
 
                 default:
@@ -205,7 +209,7 @@ namespace DADstorm
         public static void consoleCommands()
         {
 
-            while (true)
+            while (running)
             {
                 Console.WriteLine("\n-->Commands:");
                 Console.WriteLine("Start -operator_id");
@@ -218,7 +222,7 @@ namespace DADstorm
                 Console.WriteLine("Load (config file)");
 
                 String inputString = Console.ReadLine();
-                Commands(inputString);
+                executeCommands(inputString);
             }
         }
 
@@ -241,133 +245,5 @@ namespace DADstorm
                     address = "tcp://localhost:" + y.port + "/op";
             return address;
         }
-
-        public static void start(List<String> x)
-        {
-            Console.WriteLine("Start: " + x[1].ToString());
-            //temporary code - start
-            string operatorID = x[1].ToString();
-            string address = "";
-            foreach (var y in operatorsArray)
-            {
-                Console.WriteLine("Operator: " + y.name);
-                if (y.name.Equals(operatorID))
-                {
-                    address = "tcp://localhost:" + y.port + "/op";
-                    Operator op = (Operator)Activator.GetObject(
-                                                typeof(Operator),
-                                                address);
-                    op.setStart(true);
-                }
-            }
-            //temporary code - finish
-
-
-            /*
-            Operator op = (Operator)Activator.GetObject(
-                             typeof(Operator),
-                             returnAddressOfOperator(x));
-            op.createOutput();
-            */
-        }
-
-        public static void interval(List<String> x)
-        {
-            Int32 sleep_ms = Convert.ToInt32(x[2].ToString());
-            string operatorID = x[1].ToString();
-            string address = "";
-            Operator op;
-            foreach (var m in machines)
-                if (m.operatorID.Equals(operatorID))
-                {
-                    foreach (var n in m.replicas)
-                    {
-                        address = "tcp://localhost:" + n.replicaIDport + "/op";
-                        op = (Operator)Activator.GetObject(
-                                                    typeof(Operator),
-                                                    address);
-                        op.setSleep(sleep_ms);
-                    }
-                }
-
-        }
-
-        public static void status()
-        {
-            String address;
-            Operator op;
-            foreach (var m in machines)
-                foreach (var n in m.replicas)
-                {
-                    address = "tcp://localhost:" + n.replicaIDport + "/op";
-                    op = (Operator)Activator.GetObject(
-                                                typeof(Operator),
-                                                address);
-                    op.printStatus();
-                }
-        }
-
-        public static void crash(List<String> x)
-        {
-            //mathias, help me please
-            string operatorID = x[1].ToString();
-            string replicaID = x[2].ToString();
-            string url = "";
-            int i = 0;
-
-            foreach (var m in machines)
-                if (m.operatorID.Equals(operatorID))
-                    i = m.replicas[Convert.ToInt32(replicaID)].replicaIDport;
-
-            url = "tcp://localhost:" + Convert.ToString(i) + "/op";
-
-            Operator op = (Operator)Activator.GetObject(
-                                  typeof(Operator),
-                                  url);
-            op.crash();
-        }
-
-
-        public static void freeze(List<String> x)
-        {
-            string operatorID = x[1].ToString();
-            string replicaID = x[2].ToString();
-            string address;
-            Operator op;
-
-            foreach (var m in machines)
-                if (m.operatorID.Equals(operatorID))
-                {
-                    address = "tcp://localhost:" + m.replicas[Convert.ToInt32(replicaID)].replicaIDport + "/op";
-                    op = (Operator)Activator.GetObject(
-                                                typeof(Operator),
-                                                address);
-                    op.setFreeze(true);
-                }
-
-        }
-        public static void unfreeze(List<String> x)
-        {
-            string operatorID = x[1].ToString();
-            string replicaID = x[2].ToString();
-            string address;
-            Operator op;
-
-            foreach (var m in machines)
-                if (m.operatorID.Equals(operatorID))
-                {
-                    address = "tcp://localhost:" + m.replicas[Convert.ToInt32(replicaID)].replicaIDport + "/op";
-                    op = (Operator)Activator.GetObject(
-                                                typeof(Operator),
-                                                address);
-                    op.setFreeze(false);
-                }
-        }
-
-        public static void wait(List<String> x)
-        {
-            Thread.Sleep(Convert.ToInt32(x[1]));
-        }
     }
-
 }
