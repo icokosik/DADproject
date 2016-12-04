@@ -159,7 +159,9 @@ namespace DADstorm
                     int id = machines.Find(x => x.machineURL.Equals(ip)).replicas.Count;
                     machines.Find(x => x.machineURL.Equals(ip)).addReplica(new Replica(outinfo.address + "/op", id, outinfo.port));
                     portnumber++;
-                    info.outputs.Add(new SourceOPs(outinfo.name, outinfo.port));
+                    foreach(OperatorInformation info2 in operatorsArray.FindAll(x => x.name.Equals(info.name))) {
+                        info2.outputs.Add(new SourceOPs(outinfo.name, outinfo.port));
+                    }
                 }
             }
             operatorsArray.AddRange(outputOps);
