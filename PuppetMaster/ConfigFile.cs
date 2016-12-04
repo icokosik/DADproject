@@ -195,8 +195,9 @@ namespace DADstorm
                                 z.addReplica(new Replica(words2[0],counter,port));
                         }
                         
-                       
-                       // replicasArray.Add(new ReplicasInOP(ip,operator_name,words2[0],counter,port));
+                       //do NOT delete!
+                        replicasArray.Add(new ReplicasInOP(ip,operator_name,words2[0],counter,port));
+
                         counter++;
                         port++;
                         

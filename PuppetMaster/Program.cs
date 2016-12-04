@@ -30,8 +30,6 @@ namespace DADstorm
         //  public static List<Thread> threadsArray=new List<Thread>();
         static void Main(string[] args)
         {
-
-
             initPuppetMaster();
             setOperatorOutputs();
 

@@ -38,12 +38,13 @@ namespace DADstorm
                 typeof(Operator));
 
             //trying to connect
+            if(!operator1.isInformationUploaded())
+                Console.WriteLine("___ OP is NOT Connected to PM");
             do
             {
-                Console.WriteLine("___ NOT Connected to PM");
                 Thread.Sleep(300);
             } while (!operator1.isInformationUploaded());
-            Console.WriteLine("___ FINALLY Connected to PM");
+            Console.WriteLine("___ OP is FINALLY Connected to PM");
             
             operator1.setExecutor();
             operator1.setOutputOperator();

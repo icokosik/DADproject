@@ -77,22 +77,38 @@ namespace DADstorm
 
         public static void crash(List<String> x)
         {
-            //mathias, help me please
             string operatorID = x[1].ToString();
             string replicaID = x[2].ToString();
-            string url = "";
-            int i = 0;
+            string address = "";
+            Operator op;
 
-            foreach (var m in Program.machines)
-                if (m.operatorID.Equals(operatorID))
-                    i = m.replicas[Convert.ToInt32(replicaID)].replicaIDport;
+            // na ktorej machine sa nachadza replica?
+           
 
-            url = "tcp://localhost:" + Convert.ToString(i) + "/op";
+            String machine="";
+            foreach (var i in Program.replicasArray)
+            {
+                if (i.operatorID.Equals(operatorID) && i.replicaID.Equals(Convert.ToInt32(replicaID)))
+                {
+                    machine = i.machineURL;
+                }
+            }
 
-            Operator op = (Operator)Activator.GetObject(
-                                  typeof(Operator),
-                                  url);
-            op.crash();
+            string machinePort = "";
+            foreach (var ii in Program.machines)
+            {
+                if (ii.machineURL.Equals(machine))
+                    machinePort = Convert.ToString(ii.machineIDport);
+            }
+
+            address = "tcp://localhost:" + machinePort+"/kill";
+            Console.WriteLine("connecting to killObject at Machine by URL: "+address);
+            KillReplica killObject = (KillReplica)Activator.GetObject(
+                                        typeof(KillReplica),
+                                        address);
+
+            killObject.replicaID = replicaID;
+            killObject.deathInQueue=true;
         }
 
 
@@ -103,16 +119,18 @@ namespace DADstorm
             string address;
             Operator op;
 
-            foreach (var m in Program.machines)
-                if (m.operatorID.Equals(operatorID))
+            foreach (var i in Program.replicasArray)
+            {
+                if(i.operatorID.Equals(operatorID) && i.replicaID.Equals(Convert.ToInt32(replicaID)))
                 {
-                    address = "tcp://localhost:" + m.replicas[Convert.ToInt32(replicaID)].replicaIDport + "/op";
+                    address = "tcp://localhost:" + i.replicaIDport + "/op";
+                    Console.WriteLine("i found replica on port: " + address);
                     op = (Operator)Activator.GetObject(
                                                 typeof(Operator),
                                                 address);
                     op.setFreeze(true);
                 }
-
+            }
         }
         public static void unfreeze(List<String> x)
         {
@@ -120,16 +138,18 @@ namespace DADstorm
             string replicaID = x[2].ToString();
             string address;
             Operator op;
-
-            foreach (var m in Program.machines)
-                if (m.operatorID.Equals(operatorID))
+            foreach (var i in Program.replicasArray)
+            {
+                if (i.operatorID.Equals(operatorID) && i.replicaID.Equals(Convert.ToInt32(replicaID)))
                 {
-                    address = "tcp://localhost:" + m.replicas[Convert.ToInt32(replicaID)].replicaIDport + "/op";
+                    address = "tcp://localhost:" + i.replicaIDport + "/op";
+                    Console.WriteLine("i found replica on port: " + address);
                     op = (Operator)Activator.GetObject(
                                                 typeof(Operator),
                                                 address);
                     op.setFreeze(false);
                 }
+            }
         }
 
         public static void wait(List<String> x)
@@ -137,6 +157,7 @@ namespace DADstorm
             Thread.Sleep(Convert.ToInt32(x[1]));
         }
 
+      
         public static void exit()
         {
             foreach (Process p in Process.GetProcessesByName("Operator"))

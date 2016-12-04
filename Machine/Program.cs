@@ -29,6 +29,12 @@ namespace DADstorm
             initMachine(puppetMasterPort);
             runOperators();
 
+            KillReplica killObject = new KillReplica();
+            RemotingServices.Marshal(killObject, "kill",
+                typeof(KillReplica));
+
+            killLoop(killObject);
+
             Console.ReadLine();
         }
 
@@ -51,6 +57,7 @@ namespace DADstorm
             Console.WriteLine("... CONNECTED to PM");
 
             machines = m1.machines;
+
         }
 
         static void runOperators()
@@ -63,20 +70,59 @@ namespace DADstorm
                     {
                         Console.WriteLine("Replica at port: " + z.replicaIDport);
 
+                        //Process2 p = new Process2();
                         Process2 p = new Process2();
+                        processes.Add(p);
+                        Console.WriteLine("Replica ID: " + z.replicaID);
                         p.replicaID = z.replicaID;
+
                         p.StartInfo.WorkingDirectory = "..\\..\\..\\Operator\\bin\\Debug";
                         p.StartInfo.FileName = "Operator.exe";
                         p.StartInfo.Arguments = Convert.ToString(z.replicaIDport);
                         p.Start();
                         processes.Add(p);
+
+                       
                     }
                 }
+        }
+
+        public static void killLoop(KillReplica k)
+        {
+            while (true)
+            {
+                if(k.deathInQueue)
+                {
+                    killReplica(Convert.ToInt32(k.replicaID));
+                    k.deathInQueue = false;
+                }
+                Thread.Sleep(300);
+            }
+            
+        }
+
+        
+
+        public static void killReplica(int repID)
+        {
+            int t = 0;
+            int index = 0;
+
+            foreach (var p in processes)
+            {
+                if (p.replicaID == repID)
+                    index = t;
+                t++;
+                    }
+
+            processes[index].Kill();
+          
         }
     }
     class Process2:Process
     {
-        public int replicaID;
+        public int replicaID=0;
         public Process2() : base() { }
     }
+ 
 }

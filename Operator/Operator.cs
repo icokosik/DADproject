@@ -137,17 +137,17 @@ namespace DADstorm
                 }
             }
             informationUploaded = true;
-            
 
-            //freeze
-            while (freeze)
-            {
-                Console.WriteLine("Waiting for ´Unfreeze´ command. Value of Freeze = " + freeze);
-                Thread.Sleep(500);
-            }
+            Console.WriteLine("INPUTS:  --------");
+            input.showAll();
 
-            //generate output
-            tryCreateOutput();
+            //chronological logic
+            checkIfFreeze();
+            checkIfStart();
+
+            checkIfFreeze();
+
+            createOutput();
 
         }
 
@@ -213,22 +213,31 @@ namespace DADstorm
             return result;
         }
 
-        public void tryCreateOutput()
+        public void checkIfStart()
         {
-            while(!start)
+            if(!start)
+                Console.WriteLine("Waiting for ´Start´ command. Value of Start = " + start);
+
+            while (!start)
             {
-                Console.WriteLine("Waiting for ´Start´ command. Value of Start = "+start);
                 Thread.Sleep(500);
             }
-            createOutput();
+        }
 
+        public void checkIfFreeze()
+        {
+            if(freeze)
+                Console.WriteLine("Waiting for ´Unfreeze´ command. Value of Freeze = " + freeze);
+
+            while (freeze)
+            {
+                Thread.Sleep(500);
+            }
         }
 
         public void createOutput()
         {
             Thread.Sleep(interval);
-
-            //output = input;
             Console.WriteLine("INPUTS:  --------");
             input.showAll();
 
@@ -289,7 +298,9 @@ namespace DADstorm
         public void crash()
         {
             Environment.Exit(0);
+            return;
         }
+
         /// <summary>
         /// Getters and Setters
         /// </summary>
@@ -338,7 +349,9 @@ namespace DADstorm
         public void setSleep(int x)
         { this.interval = x; }
         public void setFreeze(Boolean x)
-        { this.freeze = x; }
+        {
+            Console.WriteLine("FREEZE : "+x);
+            this.freeze = x; }
         public void setStart(bool x)
         {
             this.start = x;

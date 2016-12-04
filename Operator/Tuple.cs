@@ -101,4 +101,11 @@ namespace DADstorm
             return true;
         }
     }
+
+    public class KillReplica : MarshalByRefObject
+    {
+        public String replicaID;
+        public Boolean deathInQueue = false;
+
+    }
 }
