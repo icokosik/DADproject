@@ -11,39 +11,44 @@ namespace DADstorm
         public FilterExecutor(OperatorInformation information)
         {
             this.information = information;
-            input = Tuple.EMPTY;
+            this.input = new List<Tuple>();
         }
 
-        public override bool checkInput()
+        public bool checkInput(Tuple t)
         {
-            if (input.getSize() - 1 < information.fieldnumber) return false;
+            if (t.getSize() - 1 < information.fieldnumber)
+                return false;
             return true;
         }
 
-        public override Tuple execute()
+        public override List<Tuple> execute()
         {
-            switch (information.condition)
+            List<Tuple> result = new List<Tuple>();
+            foreach (Tuple t in input)
             {
-                case FilterCondition.EQUALS:
-                    if (input.get(information.fieldnumber).Equals(information.value))
-                    {
-                        return input;
-                    }
-                    break;
-                case FilterCondition.GREATER:
-                    if (greaterThan(input.get(information.fieldnumber), information.value))
-                    {
-                        return input;
-                    }
-                    break;
-                case FilterCondition.SMALLER:
-                    if (smallerThan(input.get(information.fieldnumber), information.value))
-                    {
-                        return input;
-                    }
-                    break;
+                switch (information.condition)
+                {
+                    case FilterCondition.EQUALS:
+                        if (t.get(information.fieldnumber).Equals(information.value))
+                        {
+                            result.Add(t);
+                        }
+                        break;
+                    case FilterCondition.GREATER:
+                        if (greaterThan(t.get(information.fieldnumber), information.value))
+                        {
+                            result.Add(t);
+                        }
+                        break;
+                    case FilterCondition.SMALLER:
+                        if (smallerThan(t.get(information.fieldnumber), information.value))
+                        {
+                            result.Add(t);
+                        }
+                        break;
+                }
             }
-            return Tuple.EMPTY;
+            return result;
         }
 
         public static bool greaterThan(string value1, string value2)

@@ -10,7 +10,7 @@ namespace DADstorm
     public class ListOfTuples
     {
         public List<Tuple> tuplesArray = new List<Tuple>();
-        public OperatorSpec destinationOPType;
+        public OperatorSpec originOPType;
 
         public void addToList(Tuple x)
         {
@@ -85,6 +85,7 @@ namespace DADstorm
             {
                 builder.Append(obj.ToString()).Append(", ");
             }
+            builder.Length--;
             return builder.ToString();
         }
 

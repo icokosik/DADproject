@@ -33,11 +33,8 @@ namespace DADstorm
          */
         public void execute()
         {
-            foreach(Tuple t in input.tuplesArray)
-            {
-                setInput(t);
-                output.addToList(this.executor.execute());
-            }
+            this.executor.setOriginOPType(input.originOPType);
+            output.tuplesArray = this.executor.execute();
         }
 
         /**
@@ -108,7 +105,9 @@ namespace DADstorm
 
         public SourceOPs getHashing(List<SourceOPs> list)
         {
-            return getPrimary(list);
+            double position = (list.Count - 1) / information.routingarg;
+            int index = (int)position;
+            return list[index];
         }
 
         public SourceOPs getRandom(List<SourceOPs> list)
@@ -232,14 +231,11 @@ namespace DADstorm
             //output = input;
             Console.WriteLine("INPUTS:  --------");
             input.showAll();
-            foreach(Tuple t in input.tuplesArray)
-            {
-                executor.setInput(t);
-                Tuple result = executor.execute();
-                if(result != Tuple.EMPTY)
-                    output.addToList(result);
-            }
-            output.destinationOPType = information.type;
+
+            executor.setInput(input.tuplesArray);
+            output.tuplesArray = executor.execute();
+
+            output.originOPType = information.type;
             Console.WriteLine("OUTPUTS:   ----------");
             output.showAll();
 
@@ -303,7 +299,7 @@ namespace DADstorm
             return this.input;
         }
 
-        public void setInput(Tuple input)
+        public void setInput(List<Tuple> input)
         {
             this.executor.setInput(input);
         }

@@ -15,6 +15,7 @@ namespace DADstorm
         public int port;
         public List<string> inputsource;
         public RoutingOption routing;
+        public int routingarg;
         public int id;
         public string name;
         public int repl_factor;
@@ -41,12 +42,13 @@ namespace DADstorm
         public string path;
 
         public OperatorInformation() { }
-        public OperatorInformation(int id, string name, List<string> inputsource, RoutingOption routing, string address,
+        public OperatorInformation(int id, string name, List<string> inputsource, RoutingOption routing, int routingarg, string address,
             OperatorSpec type, int fieldnumber, string value, FilterCondition condition, string dllLocation,string className, string method, LoggingLevel logging) {
             this.id = id;
             this.name = name;
             this.inputsource = inputsource;
             this.routing = routing;
+            this.routingarg = routingarg;
             this.address = address;
             this.type = type;
             this.outputs = new List<SourceOPs>();

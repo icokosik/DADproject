@@ -13,23 +13,13 @@ namespace DADstorm
         public CountExecutor(OperatorInformation information)
         {
             this.information = information;
-            this.input = Tuple.EMPTY;
+            this.input = new List<Tuple>();
             this.counter = 0;
         }
 
-        public override bool checkInput()
+        public override List<Tuple> execute()
         {
-            return true;
-        }
-
-        public override Tuple execute()
-        {
-            if (!checkInput()) throw new InvalidInputException();
-            counter++;
-            return new Tuple(new List<string>
-            {
-               counter.ToString()
-            });
+            return new List<Tuple>() { new Tuple(new List<string>() { "" + input.Count }) };
         }
     }
 }

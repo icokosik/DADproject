@@ -13,22 +13,17 @@ namespace DADstorm
         public CustomExecutor(OperatorInformation information)
         {
             this.information = information;
-            this.input = Tuple.EMPTY;
+            this.input = new List<Tuple>();
         }
 
-        public override bool checkInput()
-        {
-            throw new NotImplementedException();
-        }
-
-        public override Tuple execute()
+        public override List<Tuple> execute()
         {
             Assembly assembly = Assembly.LoadFile(information.dllLocation);
             Type t = assembly.GetType(information.className);
             dynamic method = t.GetMethod(information.method);
             dynamic obj = Activator.CreateInstance(t);
-            string output = method.Invoke(obj, new object[] { });
-            return new Tuple(new List<string>() { output });
+            List<Tuple> output = method.Invoke(obj, new object[] { });
+            return output;
         }
 
     }

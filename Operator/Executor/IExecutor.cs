@@ -8,11 +8,11 @@ namespace DADstorm
 {
     public interface IExecutor
     {
-        bool checkInput();
-        Tuple execute();
+        List<Tuple> execute();
 
-        Tuple getInput();
-        void setInput(Tuple input);
+        List<Tuple> getInput();
+        void setInput(List<Tuple> input);
         OperatorInformation getInformation();
+        void setOriginOPType(OperatorSpec spec);
     }
 }

@@ -13,21 +13,29 @@ namespace DADstorm
         public UniqExecutor(OperatorInformation information)
         {
             this.information = information;
+            this.input = new List<Tuple>();
             this.passedItems = new List<string>();
         }
 
-        public override bool checkInput()
+        public bool checkInput(Tuple t)
         {
-            if (input.getSize() - 1 < information.fieldnumber) return false;
+            if (t.getSize() - 1 < information.fieldnumber) return false;
             return true;
         }
 
-        public override Tuple execute()
+        public override List<Tuple> execute()
         {
-            if (!checkInput()) throw new InvalidInputException();
-            if (passedItems.Contains(input.getItems()[information.fieldnumber])) return Tuple.EMPTY;
-            passedItems.Add(input.getItems()[information.fieldnumber]);
-            return input;
+            List<Tuple> result = new List<Tuple>();
+            foreach(Tuple t in input)
+            {
+                if (!checkInput(t)) throw new InvalidInputException();
+                if (!passedItems.Contains(t.getItems()[information.fieldnumber]))
+                {
+                    passedItems.Add(t.getItems()[information.fieldnumber]);
+                    result.Add(t);
+                }
+            }
+            return result;
         }
     }
 }

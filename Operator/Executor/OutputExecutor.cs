@@ -13,21 +13,29 @@ namespace DADstorm
         public OutputExecutor(OperatorInformation information)
         {
             this.information = information;
-            this.input = Tuple.EMPTY;
+            this.input = new List<Tuple>();
         }
 
-        public override bool checkInput()
+        public override List<Tuple> execute()
         {
-            throw new NotImplementedException();
-        }
-
-        public override Tuple execute()
-        {
-            Console.WriteLine(Path.GetFullPath(information.path));
+            List<string> output = new List<string>();
+            switch(this.originOPType)
+            {
+                case OperatorSpec.COUNT:
+                    output.Add(input.Last().ToString());
+                    break;
+                default:
+                    foreach(Tuple t in input)
+                    {
+                        output.Add(t.ToString());
+                    }
+                    break;
+            }
             StreamWriter wr = new StreamWriter(Path.GetFullPath(information.path), true);
-            wr.WriteLine(input.ToString());
+            foreach(string line in output)
+                wr.WriteLine(line);
             wr.Close();
-            return Tuple.EMPTY;
+            return new List<Tuple>();
         }
     }
 }

@@ -264,7 +264,7 @@ namespace DADstorm
             // Add operator to list, one for each replica_fact.
             for (int i = 0; i < repl_factor; i++)
             {
-                operatorsArray.Add(new OperatorInformation(operatorCount, operator_name, operator_source, routing, address_array[i], type, field_number, value, condition, dllLocation, className, method, logging));
+                operatorsArray.Add(new OperatorInformation(operatorCount, operator_name, operator_source, routing, routingnumber, address_array[i], type, field_number, value, condition, dllLocation, className, method, logging));
                 operatorCount++;
             }
             if(!containsInputOP(operator_source))

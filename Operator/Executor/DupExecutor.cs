@@ -11,15 +11,10 @@ namespace DADstorm
         public DupExecutor(OperatorInformation information)
         {
             this.information = information;
-            this.input = Tuple.EMPTY;
+            this.input = new List<Tuple>();
         }
 
-        public override bool checkInput()
-        {
-            return true;
-        }
-
-        public override Tuple execute()
+        public override List<Tuple> execute()
         {
             return input;
         }

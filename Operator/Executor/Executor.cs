@@ -8,18 +8,18 @@ namespace DADstorm
 {
     public abstract class Executor : IExecutor
     {
-        protected Tuple input;
+        protected List<Tuple> input;
         protected OperatorInformation information;
+        protected OperatorSpec originOPType;
+        
+        public abstract List<Tuple> execute();
 
-        public abstract bool checkInput();
-        public abstract Tuple execute();
-
-        public Tuple getInput()
+        public List<Tuple> getInput()
         {
             return input;
         }
 
-        public void setInput(Tuple input)
+        public void setInput(List<Tuple> input)
         {
             this.input = input;
         }
@@ -27,6 +27,11 @@ namespace DADstorm
         public OperatorInformation getInformation()
         {
             return information;
+        }
+
+        public void setOriginOPType(OperatorSpec spec)
+        {
+            this.originOPType = spec;
         }
     }
 }

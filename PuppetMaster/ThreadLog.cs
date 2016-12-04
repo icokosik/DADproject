@@ -27,7 +27,7 @@ namespace DADstorm
 
             if (obj == null)
             {
-                Console.WriteLine("Could not locate server");
+                Console.WriteLine("Could not locate logging server");
             }
             else
             {
