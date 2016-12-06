@@ -23,6 +23,9 @@ namespace DADstorm
         public List<SourceOPs> outputs;
         public LoggingLevel logging;
 
+        public Boolean thechoosenone = false;
+
+
         /**
          * FilterOperator
          */

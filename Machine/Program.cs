@@ -70,7 +70,6 @@ namespace DADstorm
                     {
                         Console.WriteLine("Replica at port: " + z.replicaIDport);
 
-                        //Process2 p = new Process2();
                         Process2 p = new Process2();
                         processes.Add(p);
                         Console.WriteLine("Replica ID: " + z.replicaID);

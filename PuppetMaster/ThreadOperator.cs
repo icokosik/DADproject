@@ -17,6 +17,7 @@ namespace DADstorm
         int portnumber;
         public OperatorInformation information;
         public List<SourceOPs> sourceoperators;
+
         Process p = new Process();
         
         public ThreadOperator(OperatorInformation information, List<SourceOPs> sourceoperators)
@@ -57,6 +58,11 @@ namespace DADstorm
             {
                 Console.WriteLine("{0} is connected to PM, starting upload sourceoperators and operatorinformation to Operator", information.name);
                 op.setInformation(information);
+                lock (this)
+                {
+                    op.setReplicaIDport(portnumber);
+                    op.isreplicaIDuploaded = true;
+                }
                 Console.WriteLine("Finished uploading to OP{0}", information.id);
             }
         }
@@ -66,5 +72,7 @@ namespace DADstorm
             // Free resources associated with process.
             p.Close();
         }
+
+       
     }
 }

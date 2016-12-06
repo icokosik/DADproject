@@ -10,6 +10,9 @@ namespace DADstorm
     public class Operator : MarshalByRefObject
     {
         private String operatorID;
+        private int replicaID;
+        public bool isreplicaIDuploaded = false;
+        private int replicaIDport;
         private OperatorInformation information = new OperatorInformation();
         private List<SourceOPs> inputRequesters = new List<SourceOPs>();
         private List<SourceOPs> outputOperators = new List<SourceOPs>();
@@ -33,6 +36,7 @@ namespace DADstorm
          */
         public void execute()
         {
+
             this.executor.setOriginOPType(input.originOPType);
             output.tuplesArray = this.executor.execute();
         }
@@ -133,6 +137,13 @@ namespace DADstorm
                 }
                 else // input file
                 {
+                    while (isreplicaIDuploaded == false)
+                    {
+                        Console.WriteLine(isreplicaIDuploaded);
+                        Thread.Sleep(200);
+                    }
+                    Console.WriteLine("replicaID = " + replicaID);
+                    if (isreplicaIDuploaded == true && replicaID==0)
                     input.addToList(connectToFile(operatorInput));
                 }
             }
@@ -238,8 +249,6 @@ namespace DADstorm
         public void createOutput()
         {
             Thread.Sleep(interval);
-            Console.WriteLine("INPUTS:  --------");
-            input.showAll();
 
             executor.setInput(input.tuplesArray);
             output.tuplesArray = executor.execute();
@@ -355,6 +364,29 @@ namespace DADstorm
         public void setStart(bool x)
         {
             this.start = x;
+        }
+
+        public void setOperatorID(string operatorID)
+        { this.operatorID = operatorID; }
+
+        public string getOperatorID()
+        { return operatorID; }
+
+        public int getReplicaID()
+        { return replicaID; }
+
+        public void setReplicaID(int replicaID)
+        { this.replicaID = replicaID; }
+
+        public int getReplicaIDport()
+        { return replicaIDport; }
+
+        public void setReplicaIDport(int replicaIDport)
+        { this.replicaIDport = replicaIDport; }
+
+        public void showReplicaID()
+        {
+            Console.WriteLine("replicaID= " + replicaID);
         }
     }
 }

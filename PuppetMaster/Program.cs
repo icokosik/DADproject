@@ -18,6 +18,8 @@ namespace DADstorm
         public static List<OperatorInformation> operatorsArray;
         public static List<SourceOPs> sourceoperators;
 
+        public static Random rand = new Random();
+
         /// <summary>
         ///replicasArray with wrong replicaID for now... 
         /// </summary>
@@ -37,14 +39,14 @@ namespace DADstorm
             foreach (MachineWithReplicas x in machines)
             {
                 Console.WriteLine("Executing Machine: " + x.machineURL);
-
+                //starting machine process
                 Process p = new Process();
                 p.StartInfo.WorkingDirectory = "..\\..\\..\\Machine\\bin\\Debug";
                 p.StartInfo.FileName = "Machine.exe";
                 p.StartInfo.Arguments = Convert.ToString(x.machineIDport);
                 p.Start();
 
-
+                //send packet to machine process
                 MachinePackage mp = new MachinePackage();
                 mp.machines = machines;
                 ThreadMachine m = new ThreadMachine(x.machineIDport, mp);
@@ -52,17 +54,9 @@ namespace DADstorm
                 t1.Start();
             }
 
-            Thread.Sleep(2000);
-
-            foreach (MachineWithReplicas x in machines)
-            {
-
-
-            }
-
-
-            //RUN communications PM -> Machine
+            Thread.Sleep(2000);            
             // Delegate the startup of all Operators to ThreadOperators
+
 
             foreach (OperatorInformation info in operatorsArray)
             {
@@ -72,6 +66,7 @@ namespace DADstorm
                 t1.Start();
             }
 
+            setReplicaID();
 
             //logging = LoggingLevel.FULL;
             if (logging == LoggingLevel.FULL)
@@ -81,8 +76,7 @@ namespace DADstorm
                 t2.Start();
             }
 
-            //commands from config file
-            //runScript();
+            
             //commands from console
             consoleCommands();
         }
@@ -118,6 +112,8 @@ namespace DADstorm
             foreach (var x in scripts)
                 executeCommands(x);
         }
+
+     
 
         /*
          * For every Operator, set itself as outputOperator at all of its inputOperators.
@@ -197,6 +193,9 @@ namespace DADstorm
                 case "Wait":
                     Commands.wait(mainCMD);
                     break;
+                case "Run":
+                    runScript();
+                    break;
                 case "Exit":
                     Commands.exit();
                     break;
@@ -212,6 +211,7 @@ namespace DADstorm
             while (running)
             {
                 Console.WriteLine("\n-->Commands:");
+                Console.WriteLine("Run (runs script)");
                 Console.WriteLine("Start -operator_id");
                 Console.WriteLine("Interval operator id x ms");
                 Console.WriteLine("Status");
@@ -219,7 +219,6 @@ namespace DADstorm
                 Console.WriteLine("Freeze processname");
                 Console.WriteLine("Unfreeze processname");
                 Console.WriteLine("Wait x ms");
-                Console.WriteLine("Load (config file)");
 
                 String inputString = Console.ReadLine();
                 executeCommands(inputString);
@@ -244,6 +243,24 @@ namespace DADstorm
                 if (y.name.Equals(operatorID))
                     address = "tcp://localhost:" + y.port + "/op";
             return address;
+        }
+
+        public static void setReplicaID()
+        {
+            Operator op;
+            String address = "";
+
+            foreach (var i in replicasArray)
+            {
+                address = "tcp://localhost:" + i.replicaIDport + "/op";
+                Console.WriteLine("i found replica on port: " + address);
+                op = (Operator)Activator.GetObject(
+                                            typeof(Operator),
+                                            address);
+                op.setReplicaID(i.replicaID);
+                op.showReplicaID();
+            }
+
         }
     }
 }

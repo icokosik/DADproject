@@ -25,7 +25,6 @@ namespace DADstorm
         public String machineURL;
         public int machineIDport;
         public String operatorID;
-       // public Replicas replicas=new Replicas();
 
         public List<Replica> replicas = new List<Replica>();
 
