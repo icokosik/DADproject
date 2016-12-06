@@ -143,7 +143,7 @@ namespace DADstorm
                         Thread.Sleep(200);
                     }
                     Console.WriteLine("replicaID = " + replicaID);
-                    if (isreplicaIDuploaded == true && replicaID==0)
+                    //if (isreplicaIDuploaded == true && replicaID==0)
                     input.addToList(connectToFile(operatorInput));
                 }
             }
@@ -233,6 +233,7 @@ namespace DADstorm
             {
                 Thread.Sleep(500);
             }
+            Thread.Sleep(interval);
         }
 
         public void checkIfFreeze()
@@ -384,9 +385,45 @@ namespace DADstorm
         public void setReplicaIDport(int replicaIDport)
         { this.replicaIDport = replicaIDport; }
 
+
+
+
         public void showReplicaID()
         {
             Console.WriteLine("replicaID= " + replicaID);
+        }
+        
+        public void removeFromList(int p)
+        {
+            int index = 0;
+            int counter = 0;
+            foreach(var x in outputOperators)
+            {
+
+                if (x.portnumber == p)
+                {
+                    Console.WriteLine(x.portnumber + " ==?== " + p);
+                    index = counter;
+                }
+                counter++;
+            }
+            Console.WriteLine("deleting operatora with port " + p + " at index " + index);
+            outputOperators.RemoveAt(index);
+        }
+        public void eraseMe()
+        {
+            lock (this)
+            {
+                foreach (var x in inputRequesters)
+                {
+                    Console.WriteLine("connecting to OP on port " + x.portnumber + " to erase outgoing list");
+                    string address = "tcp://localhost:" + x.portnumber + "/op";
+                    Operator op = (Operator)Activator.GetObject(
+                                   typeof(Operator),
+                                   address);
+                    op.removeFromList(x.portnumber);
+                }
+            }
         }
     }
 }

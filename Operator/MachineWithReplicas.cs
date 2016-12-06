@@ -39,6 +39,19 @@ namespace DADstorm
         {
            replicas.Add(y);
         }
+
+        public void RemoveReplica(int replicaID)
+        {
+            int index = 0;
+            int counter = 0;
+            foreach (var x in replicas)
+            {
+                if (x.replicaID == replicaID)
+                    index = counter;
+                counter++;
+            }
+            replicas.RemoveAt(index);
+        }
     }
     [Serializable]
     public class Replica

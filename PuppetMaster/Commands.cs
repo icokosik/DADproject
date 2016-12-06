@@ -16,18 +16,37 @@ namespace DADstorm
             //temporary code - start
             string operatorID = x[1].ToString();
             string address = "";
+            foreach (var o in Program.replicasArray)
+                if (o.operatorID.Equals(operatorID))
+                {
+                    Console.WriteLine("Operator: " + o.operatorID);
+
+
+                    address = "tcp://localhost:" + o.replicaIDport + "/op";
+                    Console.WriteLine("starting OP address :" + address);
+
+                    Operator op = (Operator)Activator.GetObject(
+                                                typeof(Operator),
+                                                address);
+                    op.setStart(true);
+                }
+            /*
             foreach (var y in Program.operatorsArray)
             {
                 Console.WriteLine("Operator: " + y.name);
                 if (y.name.Equals(operatorID))
                 {
+                    
                     address = "tcp://localhost:" + y.port + "/op";
+                    Console.WriteLine("starting OP address :" + address);
+
                     Operator op = (Operator)Activator.GetObject(
                                                 typeof(Operator),
                                                 address);
                     op.setStart(true);
                 }
             }
+            */
             //temporary code - finish
 
 
@@ -51,6 +70,7 @@ namespace DADstorm
                     foreach (var n in m.replicas)
                     {
                         address = "tcp://localhost:" + n.replicaIDport + "/op";
+
                         op = (Operator)Activator.GetObject(
                                                     typeof(Operator),
                                                     address);
@@ -82,17 +102,37 @@ namespace DADstorm
             string address = "";
             Operator op;
 
-            // na ktorej machine sa nachadza replica?
-           
-
             String machine="";
+            int counter = 0;
+            int index = 0;
+
             foreach (var i in Program.replicasArray)
             {
                 if (i.operatorID.Equals(operatorID) && i.replicaID.Equals(Convert.ToInt32(replicaID)))
                 {
+                    string address2 = "tcp://localhost:" + Convert.ToInt32(i.replicaIDport) + "/op";
+                    Console.WriteLine(address2);
+
+                    Operator oo = (Operator)Activator.GetObject(
+                                   typeof(Operator),
+                                   address2);
+                    oo.eraseMe();
+
                     machine = i.machineURL;
+                    index = counter;
                 }
+                counter++;
             }
+
+            
+            //remove crashed replica from array
+            Console.WriteLine("index: "+ index);
+            Program.replicasArray.RemoveAt(index);
+            foreach (var m in Program.machines)
+                if (m.operatorID.Equals(operatorID))
+                {
+                    m.RemoveReplica(Convert.ToInt32(replicaID));
+                }
 
             string machinePort = "";
             foreach (var ii in Program.machines)
@@ -101,6 +141,7 @@ namespace DADstorm
                     machinePort = Convert.ToString(ii.machineIDport);
             }
 
+            ////////////////////
             address = "tcp://localhost:" + machinePort+"/kill";
             Console.WriteLine("connecting to killObject at Machine by URL: "+address);
             KillReplica killObject = (KillReplica)Activator.GetObject(
