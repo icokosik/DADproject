@@ -16,8 +16,7 @@ namespace DADstorm
         {
             puppetMasterPort = Int32.Parse(args[0]);
             initOperator(puppetMasterPort);
-
-          //  Environment.Exit(0);
+            
             Console.ReadLine();
         }
 
@@ -27,7 +26,8 @@ namespace DADstorm
          */
         public static void initOperator(int port)
         {
-            Console.WriteLine("I´m Operator: Establishing connection with PuppetMaster at port " + port);
+            Console.WriteLine("Operator: Establishing connection with PuppetMaster at port " + port);
+            LogService.log("Operator: Establishing connection with PuppetMaster at port " + port, false);
 
             //SERVER
             TcpChannel channel = new TcpChannel(port);
@@ -45,21 +45,13 @@ namespace DADstorm
                 Thread.Sleep(300);
             } while (!operator1.isInformationUploaded());
             Console.WriteLine("___ OP is FINALLY Connected to PM");
+            LogService.log("Operator: Connected to PM", false);
             
             operator1.setExecutor();
             operator1.setOutputOperator();
             operator1.setInitialized(true);
 
             operator1.connectToInput();
-
-            //connectToOutput() is now PM command
-
         }
-
-        
-
-        
     }
-
-   
 }

@@ -23,10 +23,7 @@ namespace DADstorm
         {
             Assembly assembly = Assembly.LoadFile(Path.GetFullPath(information.dllLocation));
             string type = information.dllLocation.Split('.')[0] + "." + information.className;
-            Console.WriteLine(type);
             Type t = assembly.GetType(type);
-            foreach (var m in t.GetMethods())
-                Console.WriteLine(m);
             dynamic exec = t.GetMethod(information.method);
             dynamic instance = Activator.CreateInstance(t);
             foreach(Tuple tuple in input)

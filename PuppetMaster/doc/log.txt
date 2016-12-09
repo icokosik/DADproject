@@ -1,0 +1,57 @@
+ConfigFile: ----->operator ID: OP1
+ConfigFile: ----->operator souce: tweeters.data
+ConfigFile: ----->Repl factor: 2 Route-type: hashing Route-number: 1
+ConfigFile: ----->address: tcp://1.2.3.4:11000/op
+ConfigFile: ----->address: tcp://1.2.3.5:11000/op
+ConfigFile: ----->operator type: FILTER
+ConfigFile: ----->operator ID: OP2
+ConfigFile: ----->operator souce: OP1
+ConfigFile: ----->Repl factor: 2 Route-type: random Route-number: 0
+ConfigFile: ----->address: tcp://1.2.3.6:11000/op
+ConfigFile: ----->address: tcp://1.2.3.6:11001/op
+ConfigFile: ----->operator type: CUSTOM
+ConfigFile: ----->operator ID: OP3
+ConfigFile: ----->operator souce: OP2
+ConfigFile: ----->Repl factor: 2 Route-type: hashing Route-number: 2
+ConfigFile: ----->address: tcp://1.2.3.8:11000/op
+ConfigFile: ----->address: tcp://1.2.3.8:11001/op
+ConfigFile: ----->operator type: UNIQ
+ConfigFile: ----->operator ID: OP4
+ConfigFile: ----->operator souce: OP3
+ConfigFile: ----->Repl factor: 1 Route-type: primary Route-number: 0
+ConfigFile: ----->address: tcp://1.2.3.10:11000/op
+ConfigFile: ----->operator type: COUNT
+PuppetMaster: Executing Machine tcp://1.2.3.4
+PuppetMaster: Executing Machine tcp://1.2.3.5
+PuppetMaster: Executing Machine tcp://1.2.3.6
+PuppetMaster: Executing Machine tcp://1.2.3.8
+PuppetMaster: Executing Machine tcp://1.2.3.10
+PuppetMaster: Starting new Operator in Thread with port: 12000
+PuppetMaster: Starting new Operator in Thread with port: 12001
+PuppetMaster: Starting new Operator in Thread with port: 12002
+ThreadOperator: Trying to connect to address: tcp://localhost:12000/op
+ThreadOperator: OP1 is connected to PM, starting upload sourceoperators and operatorinformation to Operator
+PuppetMaster: Starting new Operator in Thread with port: 12003
+ThreadOperator: Trying to connect to address: tcp://localhost:12001/op
+ThreadOperator: Trying to connect to address: tcp://localhost:12002/op
+ThreadOperator: OP2 is connected to PM, starting upload sourceoperators and operatorinformation to Operator
+PuppetMaster: Starting new Operator in Thread with port: 12004
+ThreadOperator: Trying to connect to address: tcp://localhost:12003/op
+ThreadOperator: OP2 is connected to PM, starting upload sourceoperators and operatorinformation to Operator
+ThreadOperator: OP1 is connected to PM, starting upload sourceoperators and operatorinformation to Operator
+PuppetMaster: Starting new Operator in Thread with port: 12005
+ThreadOperator: Trying to connect to address: tcp://localhost:12004/op
+ThreadOperator: OP3 is connected to PM, starting upload sourceoperators and operatorinformation to Operator
+PuppetMaster: Starting new Operator in Thread with port: 12006
+ThreadOperator: Trying to connect to address: tcp://localhost:12005/op
+ThreadOperator: OP3 is connected to PM, starting upload sourceoperators and operatorinformation to Operator
+PuppetMaster: Starting new Operator in Thread with port: 12007
+ThreadOperator: Trying to connect to address: tcp://localhost:12006/op
+ThreadOperator: OP4 is connected to PM, starting upload sourceoperators and operatorinformation to Operator
+ThreadOperator: Trying to connect to address: tcp://localhost:12007/op
+ThreadOperator: OutOP4 is connected to PM, starting upload sourceoperators and operatorinformation to Operator
+PuppetMaster: I found replica
+PuppetMaster: I found replica
+ThreadOperator: Finished uploading to OP5
+ThreadOperator: Finished uploading to OP4
+ThreadOperator: Finished uploading to OP2

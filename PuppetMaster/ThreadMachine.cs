@@ -24,7 +24,6 @@ namespace DADstorm
             MachinePackage op = (MachinePackage)Activator.GetObject(
                               typeof(MachinePackage),
                               address);
-            //I HOPE THIS IS GONNA WORK :D
             op.setMachines(machines2);
 
             if (op == null)

@@ -36,7 +36,6 @@ namespace DADstorm
          */
         public void execute()
         {
-
             this.executor.setOriginOPType(input.originOPType);
             output.tuplesArray = this.executor.execute();
         }
@@ -81,7 +80,6 @@ namespace DADstorm
                 switch (information.routing)
                 {
                     case RoutingOption.PRIMARY:
-                        Console.WriteLine(getPrimary(candidates).name + " on port " + getPrimary(candidates).portnumber);
                         outputOperators.Add(getPrimary(candidates));
                         break;
                     case RoutingOption.HASHING:
@@ -92,18 +90,12 @@ namespace DADstorm
                         break;
                 }
                 tempList.RemoveAll(x => x.name.Equals(s.name));
-                Console.WriteLine("OUTPUT OPERATORS");
-                foreach(SourceOPs op in outputOperators)
-                {
-                    Console.WriteLine(op.name + " on port ", op.portnumber);
-                }
             }
 
         }
         
         public SourceOPs getPrimary(List<SourceOPs> list)
         {
-            Console.WriteLine(list[0].name + " on port " + list[0].portnumber);
             return list[0];
         }
 
@@ -139,11 +131,9 @@ namespace DADstorm
                 {
                     while (isreplicaIDuploaded == false)
                     {
-                        Console.WriteLine(isreplicaIDuploaded);
                         Thread.Sleep(200);
                     }
                     Console.WriteLine("replicaID = " + replicaID);
-                    //if (isreplicaIDuploaded == true && replicaID==0)
                     input.addToList(connectToFile(operatorInput));
                 }
             }
@@ -151,6 +141,11 @@ namespace DADstorm
 
             Console.WriteLine("INPUTS:  --------");
             input.showAll();
+            LogService.log("Operator: inputs", true);
+            foreach(Tuple s in input.tuplesArray)
+            {
+                LogService.log("Operator: input " + s.ToString(), true);
+            }
 
             //chronological logic
             checkIfFreeze();
@@ -176,7 +171,10 @@ namespace DADstorm
                                typeof(Operator),
                                address);
                 if (outputImage == null)
+                {
                     Console.WriteLine("Could not locate server ---> Can´t connect to :" + outputOp.name);
+                    LogService.log("Operator: Could not locate server ---> Can´t connect to :" + outputOp.name, false);
+                }
                 else
                 {
                     while(!outputImage.isInitialized())
@@ -226,8 +224,11 @@ namespace DADstorm
 
         public void checkIfStart()
         {
-            if(!start)
+            if (!start)
+            {
                 Console.WriteLine("Waiting for ´Start´ command. Value of Start = " + start);
+                LogService.log("Waiting for ´Start´ command. Value of Start = " + start, false);
+            }
 
             while (!start)
             {
@@ -239,7 +240,10 @@ namespace DADstorm
         public void checkIfFreeze()
         {
             if(freeze)
+            {
                 Console.WriteLine("Waiting for ´Unfreeze´ command. Value of Freeze = " + freeze);
+                LogService.log("Waiting for ´Unfreeze´ command. Value of Freeze = " + freeze, false);
+            }
 
             while (freeze)
             {
@@ -257,36 +261,25 @@ namespace DADstorm
             output.originOPType = information.type;
             Console.WriteLine("OUTPUTS:   ----------");
             output.showAll();
-
-            // Throws exceptions, needs to be fixed
-            /*
-            if (information.logging == LoggingLevel.FULL)
+            LogService.log("Operator: outputs", true);
+            foreach (Tuple s in output.tuplesArray)
             {
-               connectToLogService().setLogData(information.address,output.getDataForLog());
+                LogService.log("Operator: output " + s.ToString(), true);
             }
-            */
 
-            //after calculation send to output
             uploadToOutputs();
         }
 
         public LogService connectToLogService()
         {
             string stringbuilder = "tcp://localhost:10001/log";
-
-            Process[] list = Process.GetProcesses();
-            foreach(Process p in list)
-            {
-                Console.WriteLine(p.ToString());
-            }
-
-
             LogService objLog = (LogService)Activator.GetObject(
                           typeof(LogService),
                           stringbuilder);
             if(objLog == null)
             {
                 Console.WriteLine("Coudln't connect to LogService at address " + stringbuilder);
+                LogService.log("Operator: Coudln't connect to LogService at address " + stringbuilder, false);
             }
 
             return objLog;
@@ -402,7 +395,6 @@ namespace DADstorm
 
                 if (x.portnumber == p)
                 {
-                    Console.WriteLine(x.portnumber + " ==?== " + p);
                     index = counter;
                 }
                 counter++;

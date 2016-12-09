@@ -8,34 +8,15 @@ namespace DADstorm
 {
     public class LogService : MarshalByRefObject
     {
-        public List<string> recievedLogData = new List<string>();
-        public Object thisLock = new Object();
-
-
-        public List<string> getLogData()
+        public static LoggingLevel logging;
+        public static Queue<string> queuedData = new Queue<string>();
+        
+        public static void log(string data, bool loglevel)
         {
-            lock (thisLock)
+            if((loglevel && (logging == LoggingLevel.FULL)) || !loglevel)
             {
-                return recievedLogData;
+                queuedData.Enqueue(data);
             }
         }
-        //method is filled of string "replica_URL <list_of_tuple_fileds>"
-        public void setLogData(string url, string outputOp)
-        {
-            lock (thisLock)
-            {
-                this.recievedLogData.Add(url + " " + outputOp);
-            }
-        }
-
-        //clear list data
-        public void Clear()
-        {
-            lock (thisLock)
-            {
-                this.recievedLogData.Clear();
-            }
-        }
-
     }
 }

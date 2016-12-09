@@ -39,6 +39,7 @@ namespace DADstorm
             foreach (MachineWithReplicas x in machines)
             {
                 Console.WriteLine("Executing Machine: " + x.machineURL);
+                LogService.log("PuppetMaster: Executing Machine " + x.machineURL, false);
                 //starting machine process
                 Process p = new Process();
                 p.StartInfo.WorkingDirectory = "..\\..\\..\\Machine\\bin\\Debug";
@@ -57,25 +58,21 @@ namespace DADstorm
             Thread.Sleep(2000);            
             // Delegate the startup of all Operators to ThreadOperators
 
-
             foreach (OperatorInformation info in operatorsArray)
             {
                 Console.WriteLine("Starting new Operator in Thread with port: " + info.port);
+                LogService.log("PuppetMaster: Starting new Operator in Thread with port: " + info.port, false);
                 ThreadOperator op1 = new ThreadOperator(info, sourceoperators);
                 Thread t1 = new Thread(new ThreadStart(op1.start));
                 t1.Start();
             }
 
             setReplicaID();
-
-            //logging = LoggingLevel.FULL;
-            if (logging == LoggingLevel.FULL)
-            {
-                ThreadLog log = new ThreadLog();
-                Thread t2 = new Thread(new ThreadStart(log.start));
-                t2.Start();
-            }
-
+            
+            // Get the logging thread running
+            ThreadLog log = new ThreadLog(logging);
+            Thread t2 = new Thread(new ThreadStart(log.start));
+            t2.Start();
             
             //commands from console
             consoleCommands();
@@ -84,7 +81,7 @@ namespace DADstorm
         public static void initPuppetMaster()
         {
             sourceoperators = new List<SourceOPs>();
-            System.IO.File.Delete("LoggingFile.txt");
+            System.IO.File.Delete("..\\..\\doc\\log.txt");
             System.IO.File.Delete("..\\..\\..\\Operator\\doc\\Output.txt");
             loadConfigFile();
 
@@ -144,7 +141,6 @@ namespace DADstorm
                     outinfo.port = portnumber;
                     string ip = info.address.Split(':')[0] + ":" + info.address.Split(':')[1];
                     outinfo.address = ip + ":" + (12500 + outinfo.id);
-                    Console.WriteLine("NEW OUT AT!! " + outinfo.address);
                     outinfo.path = "..\\..\\doc\\output.txt";
                     outinfo.inputsource = new List<string>() { info.name };
                     outinfo.outputs = new List<SourceOPs>();
@@ -169,6 +165,7 @@ namespace DADstorm
         //COMMANDS
         public static void executeCommands(String inputString)
         {
+            LogService.log("PuppetMaster: Trying to execute user command " + inputString, false);
             List<String> mainCMD = mainCMDparser(inputString);
             switch (Convert.ToString(mainCMD[0]))
             {
@@ -254,6 +251,7 @@ namespace DADstorm
             {
                 address = "tcp://localhost:" + i.replicaIDport + "/op";
                 Console.WriteLine("i found replica on port: " + address);
+                LogService.log("PuppetMaster: I found replica", true);
                 op = (Operator)Activator.GetObject(
                                             typeof(Operator),
                                             address);

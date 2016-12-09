@@ -127,8 +127,12 @@ namespace DADstorm
                     
                     //print
                     Console.WriteLine("\n----->operator ID: " + operator_name);
+                    LogService.log("ConfigFile: ----->operator ID: " + operator_name, false);
                     foreach (var u in operator_source)
+                    {
                         Console.WriteLine("----->operator souce: " + u);
+                        LogService.log("ConfigFile: ----->operator souce: " + u, false);
+                    }
                 }
 
             for (int i = 0; i < x.Count; i++)
@@ -159,9 +163,8 @@ namespace DADstorm
                         default:
                             break;
                     }
-                    //print
-
                     Console.WriteLine("----->Repl factor: " + repl_factor + " Route-type: " + routingfunction + " Route-number: " + routingnumber);
+                    LogService.log("ConfigFile: ----->Repl factor: " + repl_factor + " Route-type: " + routingfunction + " Route-number: " + routingnumber, false);
                 }
 
                 //address URL1,. . .,URLn
@@ -202,9 +205,11 @@ namespace DADstorm
                         port++;
                         
                     } while (Convert.ToString(x[i + counter]).Contains(","));
-                    //print
                     foreach (var u in address_array)
+                    {
                         Console.WriteLine("----->address: " + u);
+                        LogService.log("ConfigFile: ----->address: " + u, false);
+                    }
                     
 
                 }
@@ -213,6 +218,7 @@ namespace DADstorm
                 {
                     string inputOperator = Convert.ToString(x[i + 2]); //name of input operator
                     Console.WriteLine("----->operator type: " + inputOperator);
+                    LogService.log("ConfigFile: ----->operator type: " + inputOperator, false);
                     string[] words3;
 
                     switch (inputOperator)

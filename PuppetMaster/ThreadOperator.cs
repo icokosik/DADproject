@@ -32,31 +32,22 @@ namespace DADstorm
          */
         public void start()
         {
-            /*
-            p.StartInfo.WorkingDirectory = "..\\..\\..\\Operator\\bin\\Debug";
-            p.StartInfo.FileName = "Operator.exe";
-            p.StartInfo.Arguments = Convert.ToString(portnumber);
-            p.Start();
-            */
-
-            // Connect to Operator
             string address = "tcp://localhost:" + Convert.ToInt32(portnumber) + "/op";
             Console.WriteLine("Trying to connect to address: " + address);
+            LogService.log("ThreadOperator: Trying to connect to address: " + address, false);
             Operator op = (Operator)Activator.GetObject(
                               typeof(Operator),
                               address);
-            
-            /**
-             * Should maybe block until Operator is fully initialized and has his Marshalling setup
-             */
 
             if (op == null)
             {
                 Console.WriteLine("Could not locate server");
+                LogService.log("ThreadOperator: Could not locate server", false);
             }
             else
             {
                 Console.WriteLine("{0} is connected to PM, starting upload sourceoperators and operatorinformation to Operator", information.name);
+                LogService.log("ThreadOperator: " + information.name + " is connected to PM, starting upload sourceoperators and operatorinformation to Operator", false);
                 op.setInformation(information);
                 lock (this)
                 {
@@ -64,12 +55,12 @@ namespace DADstorm
                     op.isreplicaIDuploaded = true;
                 }
                 Console.WriteLine("Finished uploading to OP{0}", information.id);
+                LogService.log("ThreadOperator: Finished uploading to OP" + information.id, false);
             }
         }
         public void close()
         {
             p.CloseMainWindow();
-            // Free resources associated with process.
             p.Close();
         }
 

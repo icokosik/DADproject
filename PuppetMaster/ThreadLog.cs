@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Runtime.Remoting;
 using System.Runtime.Remoting.Channels.Tcp;
@@ -12,39 +13,27 @@ namespace DADstorm
 {
     class ThreadLog
     {
+        private LoggingLevel logging;
+
+        public ThreadLog(LoggingLevel logging)
+        {
+            this.logging = logging;
+        }
+
         public void start() 
         {
-            TcpChannel channel = new TcpChannel(10001);
-
-            RemotingConfiguration.RegisterWellKnownServiceType(
-            typeof(LogService),
-                           "log",
-                           WellKnownObjectMode.Singleton);
-
-            LogService obj = (LogService)Activator.GetObject(
-                         typeof(LogService),
-                         "tcp://localhost:10001/log");
-
-            if (obj == null)
-            {
-                Console.WriteLine("Could not locate logging server");
-            }
-            else
-            {
-                Console.WriteLine("LogThread connected...");
-            }
-
-            //waiting for data from OP 
+            LogService.logging = logging;
+            
+            // Get up to 30 lines, log them to a file and wait a while
             while(true)
             {
-                lock (obj.thisLock) //critical section
+                List<string> toBeLogged = new List<string>();
+                while (LogService.queuedData.Count > 0 && toBeLogged.Count < 3)
                 {
-                    if (obj.getLogData() != null)
-                    {
-                        saveToFile(obj.getLogData());
-                        obj.Clear();
-                    }
-                } Thread.Sleep(10);               
+                    toBeLogged.Add(LogService.queuedData.Dequeue());
+                }
+                saveToFile(toBeLogged);
+                Thread.Sleep(2000);
             }
         }
 
@@ -52,8 +41,8 @@ namespace DADstorm
         {
             foreach(string line in logLines)
             {
-                string text = "tuple " + line + Environment.NewLine;
-                System.IO.File.AppendAllText("LoggingFile.txt", text);
+                string text = line + Environment.NewLine;
+                System.IO.File.AppendAllText("..\\..\\doc\\log.txt", text);
             }
         }
     }

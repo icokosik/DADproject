@@ -17,10 +17,10 @@ namespace DADstorm
             string operatorID = x[1].ToString();
             string address = "";
             foreach (var o in Program.replicasArray)
+            {
                 if (o.operatorID.Equals(operatorID))
                 {
                     Console.WriteLine("Operator: " + o.operatorID);
-
 
                     address = "tcp://localhost:" + o.replicaIDport + "/op";
                     Console.WriteLine("starting OP address :" + address);
@@ -30,32 +30,7 @@ namespace DADstorm
                                                 address);
                     op.setStart(true);
                 }
-            /*
-            foreach (var y in Program.operatorsArray)
-            {
-                Console.WriteLine("Operator: " + y.name);
-                if (y.name.Equals(operatorID))
-                {
-                    
-                    address = "tcp://localhost:" + y.port + "/op";
-                    Console.WriteLine("starting OP address :" + address);
-
-                    Operator op = (Operator)Activator.GetObject(
-                                                typeof(Operator),
-                                                address);
-                    op.setStart(true);
-                }
             }
-            */
-            //temporary code - finish
-
-
-            /*
-            Operator op = (Operator)Activator.GetObject(
-                             typeof(Operator),
-                             returnAddressOfOperator(x));
-            op.createOutput();
-            */
         }
 
         public static void interval(List<String> x)
