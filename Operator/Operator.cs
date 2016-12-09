@@ -177,13 +177,21 @@ namespace DADstorm
                 }
                 else
                 {
-                    while(!outputImage.isInitialized())
+                    try
                     {
-                        Thread.Sleep(200);
+                        while (!outputImage.isInitialized()) {
+                            outputImage.Ping();
+                            Thread.Sleep(200);
+                        }
+                        outputImage.addToInputTuples(getOutput());
+                        EventWaitHandle uploadReadySignal = new EventWaitHandle(false, EventResetMode.AutoReset, this.information.name + outputOp.name + outputOp.portnumber);
+                        uploadReadySignal.Set();
                     }
-                    outputImage.addToInputTuples(getOutput());
-                    EventWaitHandle uploadReadySignal = new EventWaitHandle(false, EventResetMode.AutoReset, this.information.name + outputOp.name + outputOp.portnumber);
-                    uploadReadySignal.Set();
+                    catch (System.Net.Sockets.SocketException e)
+                    {
+                        Console.WriteLine("Connection to output was lost");
+                        LogService.log("Operator: Connection to output was lost", false);
+                    }
                 }
             }
 
@@ -417,5 +425,8 @@ namespace DADstorm
                 }
             }
         }
+
+        // Does nothing, used to check connectivity
+        public void Ping() { }
     }
 }

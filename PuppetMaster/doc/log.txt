@@ -30,28 +30,39 @@ PuppetMaster: Starting new Operator in Thread with port: 12000
 PuppetMaster: Starting new Operator in Thread with port: 12001
 PuppetMaster: Starting new Operator in Thread with port: 12002
 ThreadOperator: Trying to connect to address: tcp://localhost:12000/op
+ThreadOperator: Trying to connect to address: tcp://localhost:12001/op
 ThreadOperator: OP1 is connected to PM, starting upload sourceoperators and operatorinformation to Operator
 PuppetMaster: Starting new Operator in Thread with port: 12003
-ThreadOperator: Trying to connect to address: tcp://localhost:12001/op
+ThreadOperator: OP1 is connected to PM, starting upload sourceoperators and operatorinformation to Operator
+PuppetMaster: Starting new Operator in Thread with port: 12004
 ThreadOperator: Trying to connect to address: tcp://localhost:12002/op
 ThreadOperator: OP2 is connected to PM, starting upload sourceoperators and operatorinformation to Operator
-PuppetMaster: Starting new Operator in Thread with port: 12004
-ThreadOperator: Trying to connect to address: tcp://localhost:12003/op
-ThreadOperator: OP2 is connected to PM, starting upload sourceoperators and operatorinformation to Operator
-ThreadOperator: OP1 is connected to PM, starting upload sourceoperators and operatorinformation to Operator
 PuppetMaster: Starting new Operator in Thread with port: 12005
 ThreadOperator: Trying to connect to address: tcp://localhost:12004/op
 ThreadOperator: OP3 is connected to PM, starting upload sourceoperators and operatorinformation to Operator
 PuppetMaster: Starting new Operator in Thread with port: 12006
 ThreadOperator: Trying to connect to address: tcp://localhost:12005/op
-ThreadOperator: OP3 is connected to PM, starting upload sourceoperators and operatorinformation to Operator
 PuppetMaster: Starting new Operator in Thread with port: 12007
+ThreadOperator: Trying to connect to address: tcp://localhost:12003/op
 ThreadOperator: Trying to connect to address: tcp://localhost:12006/op
+ThreadOperator: OP3 is connected to PM, starting upload sourceoperators and operatorinformation to Operator
 ThreadOperator: OP4 is connected to PM, starting upload sourceoperators and operatorinformation to Operator
 ThreadOperator: Trying to connect to address: tcp://localhost:12007/op
 ThreadOperator: OutOP4 is connected to PM, starting upload sourceoperators and operatorinformation to Operator
+ThreadOperator: OP2 is connected to PM, starting upload sourceoperators and operatorinformation to Operator
 PuppetMaster: I found replica
+ThreadOperator: Finished uploading to OP1
+ThreadOperator: Finished uploading to OP0
+ThreadOperator: Finished uploading to OP2
+ThreadOperator: Finished uploading to OP4
+PuppetMaster: I found replica
+PuppetMaster: I found replica
+PuppetMaster: I found replica
+PuppetMaster: I found replica
+ThreadOperator: Finished uploading to OP3
+ThreadOperator: Finished uploading to OP7
 PuppetMaster: I found replica
 ThreadOperator: Finished uploading to OP5
-ThreadOperator: Finished uploading to OP4
-ThreadOperator: Finished uploading to OP2
+ThreadOperator: Finished uploading to OP6
+PuppetMaster: I found replica
+PuppetMaster: Trying to execute user command Exit

@@ -13,18 +13,13 @@ namespace DADstorm
         public static void start(List<String> x)
         {
             Console.WriteLine("Start: " + x[1].ToString());
-            //temporary code - start
             string operatorID = x[1].ToString();
             string address = "";
             foreach (var o in Program.replicasArray)
             {
                 if (o.operatorID.Equals(operatorID))
                 {
-                    Console.WriteLine("Operator: " + o.operatorID);
-
                     address = "tcp://localhost:" + o.replicaIDport + "/op";
-                    Console.WriteLine("starting OP address :" + address);
-
                     Operator op = (Operator)Activator.GetObject(
                                                 typeof(Operator),
                                                 address);
@@ -75,7 +70,6 @@ namespace DADstorm
             string operatorID = x[1].ToString();
             string replicaID = x[2].ToString();
             string address = "";
-            Operator op;
 
             String machine="";
             int counter = 0;
@@ -88,10 +82,10 @@ namespace DADstorm
                     string address2 = "tcp://localhost:" + Convert.ToInt32(i.replicaIDport) + "/op";
                     Console.WriteLine(address2);
 
-                    Operator oo = (Operator)Activator.GetObject(
+                    Operator op = (Operator)Activator.GetObject(
                                    typeof(Operator),
                                    address2);
-                    oo.eraseMe();
+                    op.eraseMe();
 
                     machine = i.machineURL;
                     index = counter;
@@ -115,8 +109,7 @@ namespace DADstorm
                 if (ii.machineURL.Equals(machine))
                     machinePort = Convert.ToString(ii.machineIDport);
             }
-
-            ////////////////////
+            
             address = "tcp://localhost:" + machinePort+"/kill";
             Console.WriteLine("connecting to killObject at Machine by URL: "+address);
             KillReplica killObject = (KillReplica)Activator.GetObject(
